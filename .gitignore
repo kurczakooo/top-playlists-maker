@@ -1,0 +1,6 @@
+.env
+.cache
+
+/chromedriver-win64
+
+main.py
