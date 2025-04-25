@@ -4,6 +4,7 @@ name: Daily top 200, 100, 50 global at 6 am
 on:
   schedule:
     - cron: '0 4 * * *'  # Every day at 4am UTC - 6am CET
+  workflow_dispatch:
 
 
 jobs:
