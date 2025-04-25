@@ -1,4 +1,6 @@
 papermill
+jupyter
+ipykernel
 spotipy
 python-dotenv
 selenium
