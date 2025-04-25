@@ -9,5 +9,6 @@ workflow_notebooks = [
 for nb in workflow_notebooks:
     print(f'Running {nb}...')
     pm.execute_notebook(
-        nb
+        nb,
+        None
     )
