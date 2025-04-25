@@ -1,2 +1,7 @@
 spotipy
 python-dotenv
+selenium
+pandas
+numpy
+fuzzywuzzy
+beautifulsoup4
