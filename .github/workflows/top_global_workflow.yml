@@ -31,4 +31,4 @@ jobs:
           ID: ${{ secrets.ID }}
           SECRET: ${{ secrets.SECRET }}
           URI: ${{ secrets.URI }}
-        run: python main.py
+        run: python run.py
