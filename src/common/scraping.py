@@ -8,7 +8,7 @@ import re
 
 def scrape_billboard_global_200(driver: webdriver, 
                                 class_name: str,
-                                load_time: int = 20) -> list[str]:
+                                load_time: int = 60) -> list[str]:
     try:
         WebDriverWait(driver, load_time).until(
             EC.presence_of_all_elements_located((By.CLASS_NAME, class_name))
