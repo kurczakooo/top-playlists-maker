@@ -2,34 +2,33 @@ name: Daily top 200, 100, 50 global at 6 am
 
 # Controls when the action will run.
 on:
-  schedule:
-    - cron: '0 4 * * *'  # Every day at 4am UTC - 6am CET
-  workflow_dispatch:
-
+    schedule:
+        - cron: '0 4 * * *' # Every day at 4am UTC - 6am CET
+    workflow_dispatch:
 
 jobs:
-   update-playlist:
-    runs-on: ubuntu-latest
+    update-playlist:
+        runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
+        steps:
+            - name: Checkout repo
+              uses: actions/checkout@v3
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
+            - name: Set up Python
+              uses: actions/setup-python@v5
+              with:
+                  python-version: '3.12'
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          python -m ipykernel install --user --name python3
+            - name: Install dependencies
+              run: |
+                  python -m pip install --upgrade pip
+                  pip install -r requirements.txt
+                  python -m ipykernel install --user --name python3
 
-      - name: Run top playlists script
-        working-directory: ./src/top_global
-        env:
-          ID: ${{ secrets.ID }}
-          SECRET: ${{ secrets.SECRET }}
-          URI: ${{ secrets.URI }}
-        run: python run.py
+            - name: Run top playlists scripts
+              working-directory: ./src/top_global
+              env:
+                  ID: ${{ secrets.ID }}
+                  SECRET: ${{ secrets.SECRET }}
+                  URI: ${{ secrets.URI }}
+              run: python run.py
