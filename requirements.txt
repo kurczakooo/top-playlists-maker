@@ -1,6 +1,7 @@
 papermill
 jupyter
 ipykernel
+webdriver-manager
 spotipy
 python-dotenv
 selenium

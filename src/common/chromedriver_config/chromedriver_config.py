@@ -6,7 +6,7 @@ user_agent_string_override_command = user_agent_string.split('=')[1]
 
 chrome_options = Options()
 # Headless mode
-chrome_options.add_argument("--headless")
+chrome_options.add_argument("--headless=new")
 # Disable a feature which may tell the browser that it's being controlled by automation software
 chrome_options.add_argument("--disable-blink-features=AutomationControlled")
 # Disable sandbox for headless mode
