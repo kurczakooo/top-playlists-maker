@@ -1,6 +1,5 @@
 import pandas as pd
 
-
 def vaildate_top_df(top_x_df: pd.DataFrame, required_count: int, required_columns: list[str]) -> str:
     assert top_x_df['pos'].count() == required_count, f'Number of records is not {required_count}.'
     assert all(col in top_x_df.columns for col in required_columns), "Missing required columns."
