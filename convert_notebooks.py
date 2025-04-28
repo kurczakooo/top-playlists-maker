@@ -10,8 +10,9 @@ def convert_notebooks_to_py(directory='.'):
                 subprocess.run([
                     'jupyter', 'nbconvert', '--to', 'script', notebook_path
                 ])
-                os.remove(notebook_path)
-                print(f"Deleted {notebook_path}")
+                print(f'Success in converting {notebook_path}.')
+                # os.remove(notebook_path)
+                # print(f"Deleted {notebook_path}")
 
 if __name__ == "__main__":
     convert_notebooks_to_py()

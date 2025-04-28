@@ -1,14 +1,11 @@
-import papermill as pm
+import subprocess
 
-workflow_notebooks = [
-    "top_200_global_daily.ipynb",
-    "top_100_global_daily.ipynb",
-    "top_50_global_daily.ipynb"
+workflow_scripts = [
+    "top_200_global_daily.py",
+    "top_100_global_daily.py",
+    "top_50_global_daily.py"
 ]
 
-for nb in workflow_notebooks:
-    print(f'Running {nb}...')
-    pm.execute_notebook(
-        nb,
-        None
-    )
+for script in workflow_scripts:
+    print(f'Running {script}...')
+    subprocess.run(["python", script], check=True)
