@@ -27,12 +27,16 @@ load_dotenv()
 id = os.getenv('ID')
 secret = os.getenv('SECRET')
 uri = os.getenv('URI')
+access_token = ""
 
-sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=id, 
-                                               client_secret=secret, 
-                                               redirect_uri=uri,
-                                               scope="user-library-read \
-                                                      playlist-modify-public \
-                                                      playlist-modify-private \
-                                                      playlist-read-private \
-                                                      playlist-read-collaborative"))
+# sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=id, 
+#                                                client_secret=secret, 
+#                                                redirect_uri=uri,
+#                                                scope="user-library-read \
+#                                                       playlist-modify-public \
+#                                                       playlist-modify-private \
+#                                                       playlist-read-private \
+#                                                       playlist-read-collaborative",
+#                                                open_browser=False))
+
+sp = spotipy.Spotify(auth = access_token)

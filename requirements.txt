@@ -8,3 +8,5 @@ pandas
 numpy
 fuzzywuzzy
 beautifulsoup4
+requests
+base64
