@@ -9,3 +9,4 @@ numpy
 fuzzywuzzy
 beautifulsoup4
 requests
+python-Levenshtein

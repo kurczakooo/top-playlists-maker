@@ -34,7 +34,7 @@ def retirive_acces_token():
             print('NO REFRESH TOKEN RETURNED')
         return access_token
     else:
-        print(f"Błąd: {response.status_code}")
+        print(f"ERROR RESPONSE: {response.status_code}")
         print(response.text)
 
 
