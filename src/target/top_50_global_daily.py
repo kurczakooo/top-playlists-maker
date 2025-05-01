@@ -13,7 +13,8 @@ import pandas as pd
 import sys
 sys.path.append("../../")
 
-from config import sp, setup_logger
+from spotify_auth import sp
+from config import setup_logger
 
 from src.common.validation import vaildate_top_df
 from src.common.spotify import update_top_playlist_global

@@ -17,7 +17,8 @@ from webdriver_manager.chrome import ChromeDriverManager
 import sys
 sys.path.append("../../")
 
-from config import sp, setup_logger
+from spotify_auth import sp
+from config import setup_logger
 from src.common.chromedriver_config.chromedriver_config import chrome_options, user_agent_string_override_command
 from src.common.validation import vaildate_top_df
 from src.common.scraping import scrape_billboard_global_200, filter_names_artists_pos
