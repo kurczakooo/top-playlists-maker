@@ -6,6 +6,19 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import re
 
+def reject_billboard_cookies(driver: webdriver, 
+                             button_id: str, 
+                             load_time: int = 30):
+    try:
+        button = WebDriverWait(driver, load_time).until(
+            EC.presence_of_element_located((By.ID, button_id))
+            )
+        button.click()
+        print('Rejecting Billboard cookies.')
+    except Exception:
+        print(print("No cookie popup found or failed to click. Proceeding anyway."))
+    
+
 def scrape_billboard_global_200(driver: webdriver, 
                                 class_name: str,
                                 load_time: int = 60) -> list[str]:

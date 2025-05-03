@@ -21,7 +21,7 @@ from spotify_auth import sp
 from config import setup_logger
 from src.common.chromedriver_config.chromedriver_config import chrome_options, user_agent_string_override_command
 from src.common.validation import vaildate_top_df
-from src.common.scraping import scrape_billboard_global_200, filter_names_artists_pos
+from src.common.scraping import reject_billboard_cookies, scrape_billboard_global_200, filter_names_artists_pos
 from src.common.spotify import update_top_playlist_global, get_songs_ids_from_spotify
 
 
@@ -35,11 +35,12 @@ from src.common.spotify import update_top_playlist_global, get_songs_ids_from_sp
 
 # ### 2. Environment variables
 
-# In[6]:
+# In[ ]:
 
 
 global_200_url = "https://www.billboard.com/charts/billboard-global-200/"
 
+reject_cookies_button_id = 'onetrust-reject-all-handler'
 html_class = 'o-chart-results-list-row-container'
 pos_class = 'c-label a-font-primary-bold-l u-font-size-32@tablet u-letter-spacing-0080@tablet'
 song_html_id = 'title-of-a-story'
@@ -71,6 +72,8 @@ logger.info('Webdriver setup complete.')
 logger.info('Scraping top 200 global from billboard.')
 try:
     driver.execute_cdp_cmd('Network.setUserAgentOverride', {'userAgent' : user_agent_string_override_command})
+    
+    reject_billboard_cookies(driver, reject_cookies_button_id)
 
     driver.get(global_200_url)
 
