@@ -3,7 +3,7 @@ name: Daily top 200, 100, 50 global at 6 am
 # Controls when the action will run.
 on:
     schedule:
-        - cron: '45 6 * * *' # Every day at 4am UTC - 6am CET
+        - cron: '00 4 * * *' # Every day at 4am UTC - 6am CET
     workflow_dispatch:
 
 jobs:
