@@ -3,8 +3,6 @@
 
 # ## Daily updated top 200 global spotify playlist 
 
-# MAKE A CD PIPELINE THAT CONVERTS NOTEBOOKS TO PY FILES CAUSE LOGGER DOESN"T WORK
-
 # ### 0. Import libraries
 
 # In[ ]:
@@ -17,8 +15,8 @@ from webdriver_manager.chrome import ChromeDriverManager
 import sys
 sys.path.append("../../")
 
-from spotify_auth import sp
-from config import setup_logger
+from src.common.spotify_auth import sp
+from src.common.config import setup_logger
 from src.common.chromedriver_config.chromedriver_config import chrome_options, user_agent_string_override_command
 from src.common.validation import vaildate_top_df
 from src.common.scraping import reject_billboard_cookies, scrape_billboard_global_200, filter_names_artists_pos
