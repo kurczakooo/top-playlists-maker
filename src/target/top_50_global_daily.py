@@ -37,7 +37,7 @@ def load_top_50_df(path: str) -> pd.DataFrame:
 # In[3]:
 
 
-top_200_csv_path = "../data/top_200_global.csv"
+top_200_csv_path = "src/data/top_200_global.csv"
 
 top_df_columns = ['pos', 'title', 'artist']
 
