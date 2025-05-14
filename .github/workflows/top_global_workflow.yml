@@ -5,9 +5,9 @@ on:
     schedule:
         - cron: '00 4 * * *' # Every day at 4am UTC - 6am CET
     workflow_dispatch:
-    
+
 permissions:
-  contents: write
+    contents: write
 
 jobs:
     update-playlist:
@@ -29,20 +29,22 @@ jobs:
                   python -m ipykernel install --user --name python3
 
             - name: Run top playlists scripts
-              working-directory: ./src/target
+              #   working-directory: ./src/target
               env:
                   ID: ${{ secrets.ID }}
                   SECRET: ${{ secrets.SECRET }}
                   URI: ${{ secrets.URI }}
                   REFRESH: ${{ secrets.REFRESH }}
-              run: python run.py
+              run: |
+                  set PYTHONPATH=%CD%
+                  python src/target/run.py
 
             - name: Commit updated top_200_global.csv
               run: |
-                    git config --global user.name "github-actions[bot]"
-                    git config --global user.email "github-actions[bot]@users.noreply.github.com"
-                    git add .
-                    git commit -m "Update top_200_global.csv"
-                    git push
+                  git config --global user.name "github-actions[bot]"
+                  git config --global user.email "github-actions[bot]@users.noreply.github.com"
+                  git add .
+                  git commit -m "Update top_200_global.csv"
+                  git push
               env:
-                    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

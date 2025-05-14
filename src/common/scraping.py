@@ -5,22 +5,25 @@ from selenium.webdriver.support import expected_conditions as EC
 from bs4 import BeautifulSoup
 import pandas as pd
 import re
+from logging import Logger
 
 def reject_billboard_cookies(driver: webdriver, 
                              button_id: str, 
-                             load_time: int = 30):
+                             logger: Logger,
+                             load_time: int = 60):
     try:
         button = WebDriverWait(driver, load_time).until(
             EC.presence_of_element_located((By.ID, button_id))
             )
         button.click()
-        print('Rejecting Billboard cookies.')
+        logger.info('Rejecting Billboard cookies.')
     except Exception:
-        print(print("No cookie popup found or failed to click. Proceeding anyway."))
+        logger.error("No cookie popup found or failed to click. Proceeding anyway.")
     
 
 def scrape_billboard_global_200(driver: webdriver, 
                                 class_name: str,
+                                logger: Logger,
                                 load_time: int = 60) -> list[str]:
     try:
         WebDriverWait(driver, load_time).until(
@@ -31,7 +34,7 @@ def scrape_billboard_global_200(driver: webdriver,
         unfiltered_songs = soup.find_all('div', class_ = class_name)
         return unfiltered_songs
     except Exception as e:
-        print(f'Scraping Error: {e}')
+        logger.error(f'Scraping Error: {e}')
     finally:
         driver.quit()
         

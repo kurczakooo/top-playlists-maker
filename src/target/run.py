@@ -1,7 +1,6 @@
 import subprocess
 
 workflow_scripts = [
-    "src/common/spotify_auth.py",
     "src/target/top_200_global_daily.py",
     "src/target/top_100_global_daily.py",
     "src/target/top_50_global_daily.py"

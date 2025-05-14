@@ -1,7 +1,7 @@
 ,pos,title,artist,uri
 0,1,Ordinary,Alex Warren,spotify:track:6qqrTXSdwiJaq8SO0X2lSe
 1,2,Die With A Smile,Lady Gaga,spotify:track:2plbrEY59IikOBgBGLjaoe
-2,3,APT.,ROSE,spotify:track:5vNRhkKd0yEAg8suGBpjeY
+2,3,APT.,ROSE,spotify:track:4ObGG4MKzI5eZW50VQINEN
 3,4,Birds Of A Feather,Billie Eilish,spotify:track:6dOtVTDdiauQNBQEDOtlAB
 4,5,Beautiful Things,Benson Boone,spotify:track:6tNQ70jh4OwmPGpYy6R2o9
 5,6,like JENNIE,JENNIE,spotify:track:0fK7ie6XwGxQTIkpFoWkd1
@@ -53,7 +53,11 @@
 51,52,Gata Only,FloyyMenor,spotify:track:6XjDF6nds4DE2BBbagZol6
 52,53,Sorry I'm Here For Someone Else,Benson Boone,spotify:track:3x3K1RP3Zfi2qeMR8kyrNO
 53,54,Party 4 U,Charli xcx,spotify:track:2RdEC8Ff83WkX7kDVCHseE
+<<<<<<< HEAD
 54,55,I Ain't Coming Back,Morgan Wallen,spotify:track:5IZXB5IKAD2qlvTPJYDCFB
+=======
+54,55,I Ain't Coming Back,Morgan Wallen,spotify:track:0ILaR4ZcKfdzgm1ujRIeNe
+>>>>>>> 96b1549 (fix logging errors, working on follower reporting)
 55,56,Please Please Please,Sabrina Carpenter,spotify:track:5N3hjp1WNayUPZrA8kJmJP
 56,57,Just In Case,Morgan Wallen,spotify:track:02Ya2Q08bBKFqUJvjmyRXK
 57,58,Vitamina,Jombriel,spotify:track:0DMJz677XfXiiruhIELu2e
@@ -192,7 +196,7 @@
 190,191,Billie Jean,Michael Jackson,spotify:track:5ChkMS8OtdzJeqyybCc9R5
 191,192,Dos Dias,Tito Double P,spotify:track:5lKFO0PrOC9jmOlPEdjHsL
 192,193,Push 2 Start,Tyla,spotify:track:1Cbl3Yq8rHo7hhDQmLQagU
-193,194,Until I Found You,Stephen Sanchez,spotify:track:0T5iIrXA4p5GsubkhuBIKV
+193,194,Until I Found You,Stephen Sanchez,spotify:track:1Y3LN4zO1Edc2EluIoSPJN
 194,195,Gangsta's Paradise,Coolio,spotify:track:2PQ5At0Rnm4ogInS1ejZYl
 195,196,Rosones,Tito Double P,spotify:track:0LTwdL5yZ6YOTEGUQPFuSN
 196,197,Headlock,Imogen Heap,spotify:track:63Pi2NAx5yCgeLhCTOrEou

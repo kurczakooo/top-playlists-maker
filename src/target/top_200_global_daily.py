@@ -5,7 +5,7 @@
 
 # ### 0. Import libraries
 
-# In[ ]:
+# In[4]:
 
 
 from selenium import webdriver
@@ -71,11 +71,11 @@ logger.info('Scraping top 200 global from billboard.')
 try:
     driver.execute_cdp_cmd('Network.setUserAgentOverride', {'userAgent' : user_agent_string_override_command})
     
-    reject_billboard_cookies(driver, reject_cookies_button_id)
+    reject_billboard_cookies(driver, reject_cookies_button_id, logger)
 
     driver.get(global_200_url)
 
-    songs = scrape_billboard_global_200(driver, html_class)
+    songs = scrape_billboard_global_200(driver, html_class, logger)
 except Exception as e:
     
     logger.error(f'Error scraping top 200 global from billboard\n{e}')
