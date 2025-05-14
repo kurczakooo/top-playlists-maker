@@ -29,14 +29,13 @@ jobs:
                   python -m ipykernel install --user --name python3
 
             - name: Run top playlists scripts
-              working-directory: ./src/target
               env:
                   ID: ${{ secrets.ID }}
                   SECRET: ${{ secrets.SECRET }}
                   URI: ${{ secrets.URI }}
                   REFRESH: ${{ secrets.REFRESH }}
               run: |
-                  set PYTHONPATH=%CD%
+                  export PYTHONPATH=$(pwd)
                   python src/target/run.py
 
             - name: Commit updated top_200_global.csv
