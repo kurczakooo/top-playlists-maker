@@ -108,7 +108,7 @@ except Exception as e:
 
 logger.info('Saving the DataFrame to a file.')
 
-top_200_df.to_csv("../data/top_200_global.csv")
+top_200_df.to_csv(src/data/top_200_global.csv")
 
 logger.info('Job finished.')
 
