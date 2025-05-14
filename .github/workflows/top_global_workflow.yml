@@ -29,7 +29,7 @@ jobs:
                   python -m ipykernel install --user --name python3
 
             - name: Run top playlists scripts
-              #   working-directory: ./src/target
+              working-directory: ./src/target
               env:
                   ID: ${{ secrets.ID }}
                   SECRET: ${{ secrets.SECRET }}
