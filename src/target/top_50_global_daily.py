@@ -34,7 +34,7 @@ def load_top_50_df(path: str) -> pd.DataFrame:
 
 # ### 2. Environment variables
 
-# In[3]:
+# In[ ]:
 
 
 top_200_csv_path = "src/data/top_200_global.csv"

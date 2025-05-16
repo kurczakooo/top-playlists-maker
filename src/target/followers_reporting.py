@@ -5,7 +5,7 @@
 
 # ### 0. Import libraries
 
-# In[291]:
+# In[195]:
 
 
 import sys
@@ -16,44 +16,60 @@ from src.common.config import setup_logger
 
 from spotipy import Spotify
 import pandas as pd
-from datetime import date
+import requests
+from datetime import date, timedelta
 import matplotlib.pyplot as plt
 import seaborn as sns
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A4
+
+from io import BytesIO
+from PIL import Image
+import os
+import logging
 
 
 # ### 1. Custom functions
 
-# In[292]:
+# In[139]:
 
 
-def get_follower_data(sp: Spotify) -> pd.DataFrame:
+def get_playlists_data(sp: Spotify, cover_images_folder: str) -> pd.DataFrame:
     playlists = sp.current_user_playlists()
     data = {}
-
+    
     for playlist in playlists['items']:
         name = playlist['name']
+        name = "_".join(name.split())
         playlist_id = playlist['id']
         
-        # Pobranie pełnych danych o playliście, aby uzyskać liczbę followersów
+        # looking for the playlist based on id to get details
         playlist_details = sp.playlist(playlist_id)
         followers = playlist_details['followers']['total']
+        data.update({name : int(followers)})        
         
-        data.update({name : followers})
+        # getting and saving playlist cover to a file
+        cover_url = playlist_details['images'][0]['url']
+        response = requests.get(cover_url)
+        response.raise_for_status()
+        cover_image = Image.open(BytesIO(response.content))
+        cover_image.save(f"{cover_images_folder}{name}.png")
       
     data_df = pd.DataFrame(data = [data])
-    data_df.index = [date.today().strftime("%Y-%m-%d")]
+    data_df.index = [pd.to_datetime(date.today())]
 
     return data_df
 
 
-# In[293]:
+# In[140]:
 
 
 def update_the_historical_data(data_df: pd.DataFrame, csv_url: str = "../data/follower_count.csv") -> pd.DataFrame:
     
     hist_df = pd.read_csv(csv_url, index_col = 0)
     
-    hist_df.index = pd.to_datetime(hist_df.index).strftime("%Y-%m-%d")
+    hist_df.index = pd.to_datetime(hist_df.index)
+    hist_df = hist_df.astype(int)
     
     try:
         updated_df = pd.concat([hist_df, data_df], verify_integrity=True)
@@ -70,73 +86,191 @@ def update_the_historical_data(data_df: pd.DataFrame, csv_url: str = "../data/fo
     return updated_df
 
 
-# In[294]:
+# In[ ]:
 
 
-def create_followers_report(followers_df: pd.DataFrame):
-    sns.set_style("dark", {"grid.color": "#2A2A2A"})  # Drobna, ciemnoszara siatka
-    plt.style.use('dark_background')
-    sns.set_palette("viridis")
+def create_followers_chart(followers_df: pd.DataFrame, days_traceback: int = 365):
+    
+    sns.set_style("white", {"grid.color": "#2A2A2A"})
 
-    # Tworzenie wykresu
-    fig, ax = plt.subplots(figsize=(5, 3))
+    fig, ax = plt.subplots(figsize=(7, 2))
 
-    # Linia w stylu minimalistycznym
-    sns.lineplot(data=followers_df['HOT RAP HITS🔥🎧'], ax=ax, color='#7CFC00', linewidth=2)
+    last_30_days_df = followers_df[followers_df.index > pd.Timestamp(date.today()) - timedelta(days=days_traceback)]
+    sns.lineplot(data=last_30_days_df, ax=ax, color='#45ad61', linewidth=4)
 
-    # Dostosowanie osi i wyglądu
     ax.set_ylabel("", fontsize=5, color='white')
-    ax.tick_params(axis='x', rotation=45, labelcolor='white')
-    ax.tick_params(axis='y', labelcolor='white')
+    ax.tick_params(axis='x', labelbottom=False)
+    ax.tick_params(axis='y', labelleft=False)
+    ax.legend().remove()
 
-    # Drobne siatki w tle
-    ax.grid(color='#2A2A2A', linestyle='-', linewidth=0.5)
+    ax.grid(color='#808080', axis='y', linestyle='-', linewidth=0.5)
 
-    # Usunięcie nadmiarowych ramek
-    sns.despine(left=True, bottom=True)
+    sns.despine()
 
-    # Zapis do pliku PNG
     plt.tight_layout()
-    plt.show()
+    name = "_".join(last_30_days_df.name.split())
+    plt.savefig(f"../data/assets/charts/{name}_last_month_chart.png")
+
+
+# In[ ]:
+
+
+def generate_follower_report(name : str,
+                             charts_url: str,
+                             covers_url: str,
+                             followers_df: pd.DataFrame,
+                             logger: logging.Logger,
+                             chart_width: int = 140, 
+                             chart_height: int = 40,
+                             cover_size: int = 30,
+                             margin: int = 20,
+                             horizontal_margin: int = 60,
+                             title_margin: int = 5,
+                             outline_margin: int = 3,
+                             main_font_size: int = 10,
+                             secondary_font_size = 9,
+                             columns: int = 3, 
+                             page_height: float = A4[1]):
+    
+    c = canvas.Canvas(name, pagesize=A4)
+
+    x, y = margin, page_height - margin
+
+    for i, playlist_name in enumerate(followers_df.columns):
+        chart_path = f'{charts_url}/{playlist_name}_last_month_chart.png'
+        cover_path = f'{covers_url}/{playlist_name}.png'
+        current_followers = followers_df[playlist_name].iloc[-1]
+        a_week_ago_delta = current_followers - followers_df[playlist_name].iloc[-8]
+        a_month_ago_delta = current_followers - followers_df[playlist_name].iloc[-31]
+
+        try:
+            # playlist cover
+            c.drawImage(cover_path, 
+                        x, 
+                        y - cover_size, 
+                        width=cover_size, 
+                        height=cover_size)
+
+            # playlist title
+            display_name = " ".join((playlist_name.split('.')[0]).split("_"))
+            if len(display_name) > 20:
+                display_name = display_name[:20] + "..."
+                
+            c.setFont("Helvetica-Bold", main_font_size)
+            c.drawString(x + cover_size + title_margin, 
+                         y - main_font_size + 2, 
+                         display_name)
+            
+            # current followers count
+            c.setFont("Helvetica-Bold", main_font_size)
+            c.drawString(x + cover_size + title_margin, 
+                         y - main_font_size * 2 - outline_margin, 
+                         str(current_followers))
+            
+            # week's growth
+            c.setFont("Helvetica-Bold", secondary_font_size)
+            c.drawString(x, 
+                         y - cover_size - chart_height - secondary_font_size, 
+                         "In the last week: ")
+            if a_week_ago_delta > 0:
+                c.setFillColorRGB(0.27, 0.68, 0.38)
+            else:
+                c.setFillColorRGB(0.68, 0.27, 0.27)
+            display_week_value = f'+{a_week_ago_delta}' if a_week_ago_delta > 0 else f'{a_week_ago_delta}'
+            c.drawString(x + 80, 
+                        y - cover_size - chart_height - secondary_font_size, 
+                        display_week_value)
+            c.setFillColorRGB(0, 0, 0)
+            
+            # month's growth
+            c.setFont("Helvetica-Bold", secondary_font_size)
+            c.drawString(x, 
+                         y - cover_size - chart_height - secondary_font_size * 2 - outline_margin, 
+                         "In the last month: ")
+            if a_month_ago_delta > 0:
+                c.setFillColorRGB(0.27, 0.68, 0.38)
+            else:
+                c.setFillColorRGB(0.68, 0.27, 0.27)
+            display_month_value = f'+{a_month_ago_delta}' if a_month_ago_delta > 0 else f'{a_month_ago_delta}'
+            c.drawString(x + 80, 
+                        y - cover_size - chart_height - secondary_font_size * 2 - outline_margin, 
+                        display_month_value)
+            c.setFillColorRGB(0, 0, 0)
+
+            # line plot image
+            c.drawImage(chart_path, 
+                        x - outline_margin, 
+                        y - cover_size - chart_height, 
+                        width=chart_width, 
+                        height=chart_height)
+
+            # x pos update
+            x += chart_width + horizontal_margin
+            if (i + 1) % columns == 0:
+                x = margin  # reset x
+                y -= 120  # new line
+
+                # new page if theres no space
+                if y < margin + cover_size:
+                    c.showPage()
+                    y = page_height - cover_size - chart_height - 2 * margin
+                    
+        except Exception as e:
+            logger.error(f"R: {e}")
+
+    c.save()
 
 
 # ### 2. Envinroment variables
 
-# In[295]:
+# In[143]:
 
 
-sp = Spotify(auth = "BQCprZrBMz9NJD6nNo_m8gaNcm6a0F_Ku3Prb4YHwNYFxkSotsBLWF7Ix-y6j2PDkkAwljHBMklToWPopPnQVVhCCGbhDeZ88Az9-AoWgqrUyBM1q0MhtuvkEoOVu6GC5ur4ptklQOIUgRnFWi9gtLildB88um7STAaIxoVQoVP1-IgeBJIggOakrU1nG8Mwu1lhyNqAf9hx8y44f6WtGuKQPHDhZPdHAYfWrNL89ajLXPvgCNPNqD9k-cbEgh-jGfC2SfsBBDSBl9aNH-uA_aq0d42NPTb0q9fGB79Vg2ccaq1zIdkugxkTwYUAofBmacW0mt4")
+sp = Spotify(auth = "BQAClJVmXLkJTDh5N1yIcuvl6ODpV-mp32rSG7PEHAM41YLAPIX6Y5lYVI8wy2xLFCH0wbq-Rs8ssf_DEjY9G945M46eLmOBsFLIGOvNjzKSnd6cdgg0Wkpk0vjqiFjLuNMZQ2YAJ69dIOG-19tZihY1xOPyA2u-2jkMHcJNsuXeYz-3JR5ggkZdcB4Y_8j3vvQ_fu_UN0pv-8f85mweVDyySLGXwk57qm2xV6IEfdIl5JWiCevBEGZPX41gu0fRs_UbZue5BWpOgCz1o_RrdVD8oA-vOZtGSnE9fjKwj0jQ39Te64c2vi3o3XjCIC32SPo95T4")
 
 
-# In[296]:
+# In[144]:
 
 
-df = get_follower_data(sp)
+df = get_playlists_data(sp, "../data/assets/covers/")
 
 
-# In[302]:
+# In[145]:
 
 
 updated_df = update_the_historical_data(df)
 
 
-# In[298]:
+# In[166]:
 
 
-updated_df
+for col in updated_df.columns:
+    create_followers_chart(updated_df[col])
 
 
-# In[299]:
+# In[192]:
 
 
-create_followers_report(updated_df)
+report_name = "follower_report.pdf"
+charts_url = "../data/assets/charts"
+covers_url = "../data/assets/covers"
 
 
 # ### 3. Run the code
 
-# In[300]:
+# In[198]:
 
 
 logger = setup_logger("followers_reporting.py")
 logger.info('Starting job initialization.')
+
+
+# In[235]:
+
+
+generate_follower_report(report_name, 
+                         charts_url, 
+                         covers_url,
+                         updated_df,
+                         logger)
 

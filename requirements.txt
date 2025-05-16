@@ -12,3 +12,5 @@ requests
 python-Levenshtein
 matplotlib
 seaborn
+reportlab
+pillow
