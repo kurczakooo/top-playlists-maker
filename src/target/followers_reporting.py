@@ -5,7 +5,7 @@
 
 # ### 0. Import libraries
 
-# In[195]:
+# In[45]:
 
 
 import sys
@@ -31,7 +31,7 @@ import logging
 
 # ### 1. Custom functions
 
-# In[139]:
+# In[46]:
 
 
 def get_playlists_data(sp: Spotify, cover_images_folder: str) -> pd.DataFrame:
@@ -53,7 +53,7 @@ def get_playlists_data(sp: Spotify, cover_images_folder: str) -> pd.DataFrame:
         response = requests.get(cover_url)
         response.raise_for_status()
         cover_image = Image.open(BytesIO(response.content))
-        cover_image.save(f"{cover_images_folder}{name}.png")
+        cover_image.save(f"{cover_images_folder}/{name}.png")
       
     data_df = pd.DataFrame(data = [data])
     data_df.index = [pd.to_datetime(date.today())]
@@ -61,7 +61,7 @@ def get_playlists_data(sp: Spotify, cover_images_folder: str) -> pd.DataFrame:
     return data_df
 
 
-# In[140]:
+# In[47]:
 
 
 def update_the_historical_data(data_df: pd.DataFrame, csv_url: str = "../data/follower_count.csv") -> pd.DataFrame:
@@ -86,7 +86,7 @@ def update_the_historical_data(data_df: pd.DataFrame, csv_url: str = "../data/fo
     return updated_df
 
 
-# In[ ]:
+# In[48]:
 
 
 def create_followers_chart(followers_df: pd.DataFrame, days_traceback: int = 365):
@@ -112,7 +112,7 @@ def create_followers_chart(followers_df: pd.DataFrame, days_traceback: int = 365
     plt.savefig(f"../data/assets/charts/{name}_last_month_chart.png")
 
 
-# In[ ]:
+# In[49]:
 
 
 def generate_follower_report(name : str,
@@ -132,9 +132,17 @@ def generate_follower_report(name : str,
                              columns: int = 3, 
                              page_height: float = A4[1]):
     
+    x, y = margin, page_height - chart_height
     c = canvas.Canvas(name, pagesize=A4)
-
-    x, y = margin, page_height - margin
+    
+    # Report title
+    title = date.today().strftime("%d.%m.%Y") + " PulseBeats playlists followers report"
+    c.setFont("Helvetica-Bold", main_font_size * 2)
+    c.drawString(x, 
+                 y, 
+                 title)
+    
+    y -= chart_height
 
     for i, playlist_name in enumerate(followers_df.columns):
         chart_path = f'{charts_url}/{playlist_name}_last_month_chart.png'
@@ -208,7 +216,7 @@ def generate_follower_report(name : str,
             x += chart_width + horizontal_margin
             if (i + 1) % columns == 0:
                 x = margin  # reset x
-                y -= 120  # new line
+                y -= 130  # new line
 
                 # new page if theres no space
                 if y < margin + cover_size:
@@ -216,56 +224,50 @@ def generate_follower_report(name : str,
                     y = page_height - cover_size - chart_height - 2 * margin
                     
         except Exception as e:
-            logger.error(f"R: {e}")
+            logger.error(f"Error while generating the followers report: {e}")
 
     c.save()
 
 
 # ### 2. Envinroment variables
 
-# In[143]:
+# In[50]:
 
 
-sp = Spotify(auth = "BQAClJVmXLkJTDh5N1yIcuvl6ODpV-mp32rSG7PEHAM41YLAPIX6Y5lYVI8wy2xLFCH0wbq-Rs8ssf_DEjY9G945M46eLmOBsFLIGOvNjzKSnd6cdgg0Wkpk0vjqiFjLuNMZQ2YAJ69dIOG-19tZihY1xOPyA2u-2jkMHcJNsuXeYz-3JR5ggkZdcB4Y_8j3vvQ_fu_UN0pv-8f85mweVDyySLGXwk57qm2xV6IEfdIl5JWiCevBEGZPX41gu0fRs_UbZue5BWpOgCz1o_RrdVD8oA-vOZtGSnE9fjKwj0jQ39Te64c2vi3o3XjCIC32SPo95T4")
-
-
-# In[144]:
-
-
-df = get_playlists_data(sp, "../data/assets/covers/")
-
-
-# In[145]:
-
-
-updated_df = update_the_historical_data(df)
-
-
-# In[166]:
-
-
-for col in updated_df.columns:
-    create_followers_chart(updated_df[col])
-
-
-# In[192]:
-
-
-report_name = "follower_report.pdf"
+report_name = "../data/follower_report.pdf"
 charts_url = "../data/assets/charts"
 covers_url = "../data/assets/covers"
 
 
 # ### 3. Run the code
 
-# In[198]:
+# In[51]:
 
 
 logger = setup_logger("followers_reporting.py")
 logger.info('Starting job initialization.')
 
 
-# In[235]:
+# In[52]:
+
+
+df = get_playlists_data(sp, covers_url)
+
+
+# In[53]:
+
+
+updated_df = update_the_historical_data(df)
+
+
+# In[54]:
+
+
+for col in updated_df.columns:
+    create_followers_chart(updated_df[col])
+
+
+# In[55]:
 
 
 generate_follower_report(report_name, 

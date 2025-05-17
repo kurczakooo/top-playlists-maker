@@ -5,7 +5,7 @@
 
 # ### 0. Import libraries
 
-# In[4]:
+# In[ ]:
 
 
 from selenium import webdriver
@@ -15,7 +15,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 import sys
 sys.path.append("../../")
 
-from src.common.spotify_auth import sp
+from src.common.spotify_auth import execute_spotify_auth
 from src.common.config import setup_logger
 from src.common.chromedriver_config.chromedriver_config import chrome_options, user_agent_string_override_command
 from src.common.validation import vaildate_top_df
@@ -94,6 +94,10 @@ assert vaildate_top_df(top_200_df, required_count=200, required_columns=top_df_c
     
 logger.info('Getting songs from Spotify and updating the playlist.')
 try:
+    # spotify auth
+    logger.info('Authorizing spotify access.')
+    sp = execute_spotify_auth(logger)
+    
     # GET SONGS FROM SPOTIFY
     top_200_df = get_songs_ids_from_spotify(top_200_df, sp)
 
@@ -101,14 +105,13 @@ try:
     top_200_df = update_top_playlist_global(top_200_df, sp, top_200_playlist_name)
 except Exception as e:
     logger.error(f'Matching Spotify songs or updating playlist fail.\n{e}')
+    
+try:
+    logger.info('Saving the DataFrame to a file.')
 
+    top_200_df.to_csv("src/data/top_200_global.csv")
 
-# In[ ]:
-
-
-logger.info('Saving the DataFrame to a file.')
-
-top_200_df.to_csv("src/data/top_200_global.csv")
-
-logger.info('Job finished.')
+    logger.info('Job finished.')
+except Exception as e:
+    logger.error(f'Saving new dataframe fail.\n{e}')
 

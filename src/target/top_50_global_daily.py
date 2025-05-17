@@ -13,7 +13,7 @@ import pandas as pd
 import sys
 sys.path.append("../../")
 
-from src.common.spotify_auth import sp
+from src.common.spotify_auth import execute_spotify_auth
 from src.common.config import setup_logger
 
 from src.common.validation import vaildate_top_df
@@ -65,6 +65,10 @@ assert vaildate_top_df(top_100_df, required_count=50, required_columns=top_df_co
 
 logger.info('Updating the playlist.')
 try:
+    # spotify auth
+    logger.info('Authorizing spotify access.')
+    sp = execute_spotify_auth(logger)
+    
     # UPDATING THE PLAYLIST
     top_50_df = update_top_playlist_global(top_100_df, sp, top_50_playlist_name)
 except Exception as e:
