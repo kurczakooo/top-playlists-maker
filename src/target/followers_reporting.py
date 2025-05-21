@@ -69,7 +69,7 @@ def get_playlists_data(sp: Spotify,
 # In[21]:
 
 
-def update_the_historical_data(data_df: pd.DataFrame, csv_url: str = "../data/follower_count.csv") -> pd.DataFrame:
+def update_the_historical_data(data_df: pd.DataFrame, csv_url: str = "src/data/follower_count.csv") -> pd.DataFrame:
     
     hist_df = pd.read_csv(csv_url, index_col = 0)
     
@@ -116,7 +116,7 @@ def create_followers_chart(followers_df: pd.DataFrame, logger: logging.Logger, d
     name = "_".join(last_30_days_df.name.split())
     
     logger.info(f'Saving {name} follower chart to file.')
-    plt.savefig(f"../data/assets/charts/{name}_last_month_chart.png")
+    plt.savefig(f"src/data/assets/charts/{name}_last_month_chart.png")
 
 
 # In[23]:
@@ -253,9 +253,9 @@ async def send_telegram_notif(bot, chat_id, report_name, logger ):
 
 date_today = date.today().strftime("%d_%m_%Y")
 
-report_name = f"../data/follower_report_{date_today}.pdf"
-charts_url = "../data/assets/charts"
-covers_url = "../data/assets/covers"
+report_name = f"src/data/follower_report_{date_today}.pdf"
+charts_url = "src/data/assets/charts"
+covers_url = "src/data/assets/covers"
 
 
 # ### 3. Run the code
