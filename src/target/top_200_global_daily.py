@@ -66,34 +66,33 @@ logger.info('Webdriver setup complete.')
 # In[ ]:
 
 
-# SCRAPING THE TOP 200 GLOABAL FROM BILLBOARD
-logger.info('Scraping top 200 global from billboard.')
 try:
-    driver.execute_cdp_cmd('Network.setUserAgentOverride', {'userAgent' : user_agent_string_override_command})
+    # SCRAPING THE TOP 200 GLOABAL FROM BILLBOARD
+    logger.info('Scraping top 200 global from billboard.')
+    
+    driver.execute_cdp_cmd('Network.setUserAgentOverride', 
+                           {'userAgent' : user_agent_string_override_command})
     
     reject_billboard_cookies(driver, reject_cookies_button_id, logger)
 
     driver.get(global_200_url)
 
     songs = scrape_billboard_global_200(driver, html_class, logger)
-except Exception as e:
-    
-    logger.error(f'Error scraping top 200 global from billboard\n{e}')
 
-assert len(songs) == 200, 'Number of html elements is not 200.'
+    assert len(songs) == 200, 'Number of html elements is not 200.'
 
-# TRASFORMING THE DATA TO A DF, DO QC
-logger.info('Transforming the data to a DataFrame, doing quality checks.')
-top_200_df = filter_names_artists_pos(songs, 
-                                      song_html_id, 
-                                      artist_class, 
-                                      pos_class, 
-                                      top_df_columns)
+    # TRASFORMING THE DATA TO A DF, DO QC
+    logger.info('Transforming the data to a DataFrame, doing quality checks.')
+    top_200_df = filter_names_artists_pos(songs, 
+                                        song_html_id, 
+                                        artist_class, 
+                                        pos_class, 
+                                        top_df_columns)
 
-assert vaildate_top_df(top_200_df, required_count=200, required_columns=top_df_columns) == 'OK', 'QC fail.'
-    
-logger.info('Getting songs from Spotify and updating the playlist.')
-try:
+    assert vaildate_top_df(top_200_df, required_count=200, required_columns=top_df_columns) == 'OK', 'QC fail.'
+        
+    logger.info('Getting songs from Spotify and updating the playlist.')
+
     # spotify auth
     logger.info('Authorizing spotify access.')
     sp = execute_spotify_auth(logger)
@@ -103,15 +102,13 @@ try:
 
     # REFRESH TOP 200 GLOBAL PLAYLIST
     top_200_df = update_top_playlist_global(top_200_df, sp, top_200_playlist_name)
-except Exception as e:
-    logger.error(f'Matching Spotify songs or updating playlist fail.\n{e}')
     
-try:
     logger.info('Saving the DataFrame to a file.')
 
     top_200_df.to_csv("src/data/top_200_global.csv")
 
     logger.info('Job finished.')
+    
 except Exception as e:
-    logger.error(f'Saving new dataframe fail.\n{e}')
+    logger.error(f'Top 200 global pipeline fail: {e}')
 

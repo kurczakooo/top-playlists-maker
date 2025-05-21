@@ -34,16 +34,18 @@ jobs:
                   SECRET: ${{ secrets.SECRET }}
                   URI: ${{ secrets.URI }}
                   REFRESH: ${{ secrets.REFRESH }}
+                  TELEGRAM_API_KEY: ${{secrets.TELEGRAM_API_KEY}}
+                  TELEGRAM_CHAT_ID: ${{secrets.TELEGRAM_CHAT_ID}}
               run: |
                   export PYTHONPATH=$(pwd)
                   python src/target/run.py
 
-            - name: Commit updated top_200_global.csv
+            - name: Commit updated top_global_songs.csv
               run: |
                   git config --global user.name "github-actions[bot]"
                   git config --global user.email "github-actions[bot]@users.noreply.github.com"
                   git add .
-                  git commit -m "Update top_200_global.csv"
+                  git commit -m "Updated top global songs data"
                   git push
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

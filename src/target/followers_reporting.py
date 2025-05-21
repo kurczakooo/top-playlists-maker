@@ -5,14 +5,15 @@
 
 # ### 0. Import libraries
 
-# In[45]:
+# In[19]:
 
 
 import sys
 sys.path.append("../../")
 
-from src.common.spotify_auth import sp
 from src.common.config import setup_logger
+from src.common.spotify_auth import execute_spotify_auth
+from src.common.telegram_alerts import init_telegram_bot, send_daily_follower_report
 
 from spotipy import Spotify
 import pandas as pd
@@ -25,16 +26,17 @@ from reportlab.lib.pagesizes import A4
 
 from io import BytesIO
 from PIL import Image
-import os
 import logging
 
 
 # ### 1. Custom functions
 
-# In[46]:
+# In[ ]:
 
 
-def get_playlists_data(sp: Spotify, cover_images_folder: str) -> pd.DataFrame:
+def get_playlists_data(sp: Spotify, 
+                       cover_images_folder: str,
+                       logger: logging.Logger) -> pd.DataFrame:
     playlists = sp.current_user_playlists()
     data = {}
     
@@ -44,10 +46,12 @@ def get_playlists_data(sp: Spotify, cover_images_folder: str) -> pd.DataFrame:
         playlist_id = playlist['id']
         
         # looking for the playlist based on id to get details
+        logger.info(f"Extracting {name} info.")
         playlist_details = sp.playlist(playlist_id)
         followers = playlist_details['followers']['total']
         data.update({name : int(followers)})        
         
+        logger.info(f"Extracting {name} cover image.")
         # getting and saving playlist cover to a file
         cover_url = playlist_details['images'][0]['url']
         response = requests.get(cover_url)
@@ -61,7 +65,7 @@ def get_playlists_data(sp: Spotify, cover_images_folder: str) -> pd.DataFrame:
     return data_df
 
 
-# In[47]:
+# In[21]:
 
 
 def update_the_historical_data(data_df: pd.DataFrame, csv_url: str = "../data/follower_count.csv") -> pd.DataFrame:
@@ -86,10 +90,10 @@ def update_the_historical_data(data_df: pd.DataFrame, csv_url: str = "../data/fo
     return updated_df
 
 
-# In[48]:
+# In[ ]:
 
 
-def create_followers_chart(followers_df: pd.DataFrame, days_traceback: int = 365):
+def create_followers_chart(followers_df: pd.DataFrame, logger: logging.Logger, days_traceback: int = 365):
     
     sns.set_style("white", {"grid.color": "#2A2A2A"})
 
@@ -109,10 +113,12 @@ def create_followers_chart(followers_df: pd.DataFrame, days_traceback: int = 365
 
     plt.tight_layout()
     name = "_".join(last_30_days_df.name.split())
+    
+    logger.info(f'Saving {name} follower chart to file.')
     plt.savefig(f"../data/assets/charts/{name}_last_month_chart.png")
 
 
-# In[49]:
+# In[23]:
 
 
 def generate_follower_report(name : str,
@@ -231,48 +237,60 @@ def generate_follower_report(name : str,
 
 # ### 2. Envinroment variables
 
-# In[50]:
+# In[24]:
 
 
-report_name = "../data/follower_report.pdf"
+date_today = date.today().strftime("%d_%m_%Y")
+
+report_name = f"../data/follower_report_{date_today}.pdf"
 charts_url = "../data/assets/charts"
 covers_url = "../data/assets/covers"
 
 
 # ### 3. Run the code
 
-# In[51]:
+# In[25]:
 
 
 logger = setup_logger("followers_reporting.py")
 logger.info('Starting job initialization.')
 
 
-# In[52]:
+# In[ ]:
 
 
-df = get_playlists_data(sp, covers_url)
-
-
-# In[53]:
-
-
-updated_df = update_the_historical_data(df)
-
-
-# In[54]:
-
-
-for col in updated_df.columns:
-    create_followers_chart(updated_df[col])
-
-
-# In[55]:
-
-
-generate_follower_report(report_name, 
+try:
+    logger.info('Authorizing spotify access.')
+    sp = execute_spotify_auth(logger)
+    
+    logger.info('Authorizing and initializing telegram bot.')
+    bot, chat_id = init_telegram_bot()
+    
+    logger.info('Getting followers data from Spotify.')
+    df = get_playlists_data(sp, covers_url)
+    
+    logger.info('Updating local followers data.')
+    updated_df = update_the_historical_data(df)
+    
+    logger.info('Creating follower charts.')
+    for col in updated_df.columns:
+        create_followers_chart(updated_df[col])
+    
+    logger.info('Generating follower report.')
+    generate_follower_report(report_name, 
                          charts_url, 
                          covers_url,
                          updated_df,
                          logger)
+    
+    logger.info('Sending the report to Telegram.')
+    await send_daily_follower_report(bot, 
+                               chat_id, 
+                               report_name, 
+                               logger)
+        
+    logger.info('Job finished.')
+
+except Exception as e:
+    logger.error(f'Playlist followers reports pipeline fail: {e}')
 

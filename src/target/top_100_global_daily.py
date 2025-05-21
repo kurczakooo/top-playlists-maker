@@ -56,15 +56,16 @@ logger.info('Starting job initialization.')
 # In[ ]:
 
 
-logger.info('Reading the csv with songs.')
-# LOAD TOP 200 SONGS SCRAPED FROM BILLBOARD
-top_100_df = load_top_100_df(top_200_csv_path)
-
-# DQ
-assert vaildate_top_df(top_100_df, required_count=100, required_columns=top_df_columns) == 'OK', 'QC fail.'
-
-logger.info('Updating the playlist.')
 try:
+    logger.info('Reading the csv with songs.')
+    # LOAD TOP 200 SONGS SCRAPED FROM BILLBOARD
+    top_100_df = load_top_100_df(top_200_csv_path)
+
+    # DQ
+    assert vaildate_top_df(top_100_df, required_count=100, required_columns=top_df_columns) == 'OK', 'QC fail.'
+
+    logger.info('Updating the playlist.')
+
     # spotify auth
     logger.info('Authorizing spotify access.')
     sp = execute_spotify_auth(logger)
@@ -72,7 +73,7 @@ try:
     # UPDATING THE PLAYLIST
     top_100_df = update_top_playlist_global(top_100_df, sp, top_100_playlist_name)
 except Exception as e:
-    logger.error(f'Updating playlist fail.\n{e}')
+    logger.error(f'Top 100 global pipeline fail:{e}')
     
 
 logger.info('Job finished.')
