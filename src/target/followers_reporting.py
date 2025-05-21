@@ -278,14 +278,14 @@ try:
     bot, chat_id = init_telegram_bot()
     
     logger.info('Getting followers data from Spotify.')
-    df = get_playlists_data(sp, covers_url)
+    df = get_playlists_data(sp, covers_url, logger)
     
     logger.info('Updating local followers data.')
     updated_df = update_the_historical_data(df)
     
     logger.info('Creating follower charts.')
     for col in updated_df.columns:
-        create_followers_chart(updated_df[col])
+        create_followers_chart(updated_df[col], logger)
     
     logger.info('Generating follower report.')
     generate_follower_report(report_name, 
