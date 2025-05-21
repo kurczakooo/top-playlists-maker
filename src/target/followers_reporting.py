@@ -5,7 +5,7 @@
 
 # ### 0. Import libraries
 
-# In[19]:
+# In[ ]:
 
 
 import sys
@@ -27,6 +27,7 @@ from reportlab.lib.pagesizes import A4
 from io import BytesIO
 from PIL import Image
 import logging
+import asyncio
 
 
 # ### 1. Custom functions
@@ -235,6 +236,16 @@ def generate_follower_report(name : str,
     c.save()
 
 
+# In[ ]:
+
+
+async def send_telegram_notif(bot, chat_id, report_name, logger ):
+    await send_daily_follower_report(bot, 
+                               chat_id, 
+                               report_name, 
+                               logger)
+
+
 # ### 2. Envinroment variables
 
 # In[24]:
@@ -256,7 +267,7 @@ logger = setup_logger("followers_reporting.py")
 logger.info('Starting job initialization.')
 
 
-# In[ ]:
+# In[1]:
 
 
 try:
@@ -284,10 +295,7 @@ try:
                          logger)
     
     logger.info('Sending the report to Telegram.')
-    await send_daily_follower_report(bot, 
-                               chat_id, 
-                               report_name, 
-                               logger)
+    asyncio.run(send_telegram_notif(bot, chat_id, report_name, logger))
         
     logger.info('Job finished.')
 
