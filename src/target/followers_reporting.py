@@ -66,7 +66,7 @@ def get_playlists_data(sp: Spotify,
     return data_df
 
 
-# In[21]:
+# In[ ]:
 
 
 def update_the_historical_data(data_df: pd.DataFrame, csv_url: str = "src/data/follower_count.csv") -> pd.DataFrame:
@@ -248,7 +248,7 @@ async def send_telegram_notif(bot, chat_id, report_name, logger ):
 
 # ### 2. Envinroment variables
 
-# In[24]:
+# In[ ]:
 
 
 date_today = date.today().strftime("%d_%m_%Y")
@@ -267,7 +267,7 @@ logger = setup_logger("followers_reporting.py")
 logger.info('Starting job initialization.')
 
 
-# In[1]:
+# In[ ]:
 
 
 try:

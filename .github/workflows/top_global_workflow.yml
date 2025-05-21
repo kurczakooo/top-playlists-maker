@@ -45,7 +45,7 @@ jobs:
                   git config --global user.name "github-actions[bot]"
                   git config --global user.email "github-actions[bot]@users.noreply.github.com"
                   git add .
-                  git commit -m "Updated top global songs data"
+                  git commit -m "Updated top global songs data, created and saved a new follower report"
                   git push
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -49,7 +49,7 @@ top_100_playlist_name = 'DAILY TOP 100'
 # In[ ]:
 
 
-logger = setup_logger("top_200_global_daily.py")
+logger = setup_logger("top_100_global_daily.py")
 logger.info('Starting job initialization.')
 
 
