@@ -23,6 +23,8 @@ from src.common.scraping import reject_billboard_cookies, scrape_billboard_globa
 from src.common.spotify import update_top_playlist_global, get_songs_ids_from_spotify
 from src.common.telegram_alerts import init_telegram_bot, send_top_global_workflow_output_alert
 
+import asyncio
+
 
 # ### 1. Custom functions
 
@@ -112,13 +114,13 @@ try:
     top_200_df.to_csv("src/data/top_200_global.csv")
     
     logger.info("Sending a Telegram notification.")
-    send_top_global_workflow_output_alert(bot, chat_id, "TOP 200 GLOBAL PIPELINE SUCCESS", logger)
+    asyncio.run(send_top_global_workflow_output_alert(bot, chat_id, "TOP 200 GLOBAL PIPELINE SUCCESS", logger))
 
     logger.info('Job finished.')
     
 except Exception as e:
     logger.error(f'Top 200 global pipeline fail: {e}')
     logger.info("Sending a Telegram notification.")
-    send_top_global_workflow_output_alert(bot, chat_id, f'TOP 200 GLOBAL PIPELINE FAIL: {e}', logger)
+    asyncio.run(send_top_global_workflow_output_alert(bot, chat_id, f'TOP 200 GLOBAL PIPELINE FAIL: {e}', logger))
     
 

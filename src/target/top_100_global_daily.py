@@ -20,6 +20,8 @@ from src.common.validation import vaildate_top_df
 from src.common.spotify import update_top_playlist_global
 from src.common.telegram_alerts import init_telegram_bot, send_top_global_workflow_output_alert
 
+import asyncio
+
 
 # ### 1. Custom functions
 
@@ -78,12 +80,12 @@ try:
     top_100_df = update_top_playlist_global(top_100_df, sp, top_100_playlist_name)
     
     logger.info("Sending a Telegram notification.")
-    send_top_global_workflow_output_alert(bot, chat_id, "TOP 100 GLOBAL PIPELINE SUCCESS", logger)
+    asyncio.run(send_top_global_workflow_output_alert(bot, chat_id, "TOP 100 GLOBAL PIPELINE SUCCESS", logger))
     
     logger.info('Job finished.')
     
 except Exception as e:
     logger.error(f'Top 100 global pipeline fail:{e}')
     logger.info("Sending a Telegram notification.")
-    send_top_global_workflow_output_alert(bot, chat_id, f'TOP 200 GLOBAL PIPELINE FAIL: {e}', logger)
+    asyncio.run(send_top_global_workflow_output_alert(bot, chat_id, f'TOP 200 GLOBAL PIPELINE FAIL: {e}', logger))
 
