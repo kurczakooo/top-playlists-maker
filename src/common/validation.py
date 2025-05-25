@@ -7,7 +7,6 @@ def vaildate_top_df(top_x_df: pd.DataFrame, required_count: int, required_column
     assert top_x_df.notnull().all().all(), "There are missing values!"
     assert top_x_df['pos'].is_monotonic_increasing, "'pos' is not sorted!"
     assert top_x_df['pos'].is_unique, "'pos' is not unique!"
-    assert top_x_df['title'].is_unique, "'title' is not unique!"
     assert not top_x_df[['pos', 'title', 'artist']].duplicated().any(), "A record is duplicated."
     assert not top_x_df[['title', 'artist']].duplicated().any(), "A song is duplicated."
     

@@ -21,6 +21,7 @@ from src.common.chromedriver_config.chromedriver_config import chrome_options, u
 from src.common.validation import vaildate_top_df
 from src.common.scraping import reject_billboard_cookies, scrape_billboard_global_200, filter_names_artists_pos
 from src.common.spotify import update_top_playlist_global, get_songs_ids_from_spotify
+from src.common.telegram_alerts import init_telegram_bot, send_top_global_workflow_output_alert
 
 
 # ### 1. Custom functions
@@ -59,6 +60,9 @@ logger.info('Starting job initialization.')
 service = Service(ChromeDriverManager().install())  
 driver = webdriver.Chrome(service = service, options = chrome_options)
 driver.set_page_load_timeout(60)
+
+logger.info('Authorizing and initializing telegram bot.')
+bot, chat_id = init_telegram_bot()
 
 logger.info('Webdriver setup complete.')
 
@@ -106,9 +110,15 @@ try:
     logger.info('Saving the DataFrame to a file.')
 
     top_200_df.to_csv("src/data/top_200_global.csv")
+    
+    logger.info("Sending a Telegram notification.")
+    send_top_global_workflow_output_alert(bot, chat_id, "TOP 200 GLOBAL PIPELINE SUCCESS", logger)
 
     logger.info('Job finished.')
     
 except Exception as e:
     logger.error(f'Top 200 global pipeline fail: {e}')
+    logger.info("Sending a Telegram notification.")
+    send_top_global_workflow_output_alert(bot, chat_id, f'TOP 200 GLOBAL PIPELINE FAIL: {e}', logger)
+    
 

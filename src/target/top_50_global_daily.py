@@ -18,6 +18,7 @@ from src.common.config import setup_logger
 
 from src.common.validation import vaildate_top_df
 from src.common.spotify import update_top_playlist_global
+from src.common.telegram_alerts import init_telegram_bot, send_top_global_workflow_output_alert
 
 
 # ### 1. Custom functions
@@ -52,6 +53,9 @@ top_50_playlist_name = 'DAILY TOP 50'
 logger = setup_logger("top_50_global_daily.py")
 logger.info('Starting job initialization.')
 
+logger.info('Authorizing and initializing telegram bot.')
+bot, chat_id = init_telegram_bot()
+
 
 # In[ ]:
 
@@ -71,10 +75,15 @@ try:
     sp = execute_spotify_auth(logger)
     
     # UPDATING THE PLAYLIST
-    top_50_df = update_top_playlist_global(top_100_df, sp, top_50_playlist_name)
+    top_50_df = update_top_playlist_global(top_100_df, sp, top_50_playlist_name)    
+    
+    logger.info("Sending a Telegram notification.")
+    send_top_global_workflow_output_alert(bot, chat_id, "TOP 50 GLOBAL PIPELINE SUCCESS", logger)
+    
+    logger.info('Job finished.')
+    
 except Exception as e:
     logger.error(f'Top 50 global pipeline fail: {e}')
-    
-
-logger.info('Job finished.')
+    logger.info("Sending a Telegram notification.")
+    send_top_global_workflow_output_alert(bot, chat_id, f'TOP 200 GLOBAL PIPELINE FAIL: {e}', logger)
 
