@@ -22,13 +22,14 @@ jobs:
               with:
                   python-version: '3.12.8'
 
-            - name: Install dependencies
+            - name: Install dependencies and MEGA CLI
               run: |
+                  wget https://mega.nz/linux/repo/xUbuntu_22.04/amd64/megacmd-xUbuntu_22.04_amd64.deb && sudo apt install "$PWD/megacmd-xUbuntu_22.04_amd64.deb"
                   python -m pip install --upgrade pip
                   pip install -r requirements.txt
                   python -m ipykernel install --user --name python3
 
-            - name: Run top playlists scripts
+            - name: Top playlists pipelines, Follower reporting
               env:
                   ID: ${{ secrets.ID }}
                   SECRET: ${{ secrets.SECRET }}
@@ -36,11 +37,13 @@ jobs:
                   REFRESH: ${{ secrets.REFRESH }}
                   TELEGRAM_API_KEY: ${{secrets.TELEGRAM_API_KEY}}
                   TELEGRAM_CHAT_ID: ${{secrets.TELEGRAM_CHAT_ID}}
+                  MEGA_LOGIN: ${{secrets.MEGA_LOGIN}}
+                  MEGA_PASSWORD: ${{secrets.MEGA_PASSWORD}}
               run: |
                   export PYTHONPATH=$(pwd)
                   python src/target/run.py
 
-            - name: Commit updated top_global_songs.csv
+            - name: Commit changes
               run: |
                   git config --global user.name "github-actions[bot]"
                   git config --global user.email "github-actions[bot]@users.noreply.github.com"

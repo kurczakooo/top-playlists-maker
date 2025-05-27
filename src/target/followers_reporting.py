@@ -5,7 +5,7 @@
 
 # ### 0. Import libraries
 
-# In[ ]:
+# In[2]:
 
 
 import sys
@@ -28,6 +28,9 @@ from io import BytesIO
 from PIL import Image
 import logging
 import asyncio
+import os
+import subprocess
+from dotenv import load_dotenv
 
 
 # ### 1. Custom functions
@@ -119,7 +122,7 @@ def create_followers_chart(followers_df: pd.DataFrame, logger: logging.Logger, d
     plt.savefig(f"src/data/assets/charts/{name}_last_month_chart.png")
 
 
-# In[23]:
+# In[ ]:
 
 
 def generate_follower_report(name : str,
@@ -137,7 +140,7 @@ def generate_follower_report(name : str,
                              main_font_size: int = 10,
                              secondary_font_size = 9,
                              columns: int = 3, 
-                             page_height: float = A4[1]):
+                             page_height: float = A4[1]) -> canvas.Canvas:
     
     x, y = margin, page_height - chart_height
     c = canvas.Canvas(name, pagesize=A4)
@@ -233,7 +236,42 @@ def generate_follower_report(name : str,
         except Exception as e:
             logger.error(f"Error while generating the followers report: {e}")
 
-    c.save()
+    return c
+
+
+# In[ ]:
+
+
+def replace_the_report_and_push_to_mega(report: canvas.Canvas, 
+                                        report_path: str,
+                                        report_name: str,
+                                        logger: logging.Logger):
+    reports = os.listdir(report_path)
+    for file in reports:
+        logger.info(f"Removing {file} from local data folder.")
+        os.remove(os.path.join(report_path, file))
+        
+    logger.info("Saving new report locally.")
+    report.save()
+    
+    try:
+        #saving to MEGA
+        logger.info("Authorizing MEGA.")
+        load_dotenv()
+        mega_login = os.getenv("MEGA_LOGIN")
+        mega_password = os.getenv("MEGA_PASSWORD")
+        
+        subprocess.run(f'mega-login "{mega_login}" "{mega_password}"', shell=True, check=True)
+        
+        logger.info("Pushing new report to MEGA.")
+        subprocess.run(f"mega-put {report_name} /playlists_reports", shell=True, check=True)
+        
+        logger.info("Logging out of MEGA.")
+        subprocess.run(f'mega-logout', shell=True, check=True)
+        
+        
+    except subprocess.CalledProcessError as e:
+        logger.error(f"Error authorizing or saving report to MEGA: {e.stderr.strip()}")
 
 
 # In[ ]:
@@ -253,14 +291,15 @@ async def send_telegram_notif(bot, chat_id, report_name, logger ):
 
 date_today = date.today().strftime("%d_%m_%Y")
 
-report_name = f"src/data/follower_report_{date_today}.pdf"
+report_path = "src/data/reports"
+report_name = report_path + f"/follower_report_{date_today}.pdf"
 charts_url = "src/data/assets/charts"
 covers_url = "src/data/assets/covers"
 
 
 # ### 3. Run the code
 
-# In[25]:
+# In[5]:
 
 
 logger = setup_logger("followers_reporting.py")
@@ -288,11 +327,14 @@ try:
         create_followers_chart(updated_df[col], logger)
     
     logger.info('Generating follower report.')
-    generate_follower_report(report_name, 
-                         charts_url, 
-                         covers_url,
-                         updated_df,
-                         logger)
+    report = generate_follower_report(report_name, 
+                                      charts_url, 
+                                      covers_url,
+                                      updated_df,
+                                      logger)
+    
+    logger.info('Saving the report on MEGA.')
+    replace_the_report_and_push_to_mega(report, report_path, report_name, logger)
     
     logger.info('Sending the report to Telegram.')
     asyncio.run(send_telegram_notif(bot, chat_id, report_name, logger))
