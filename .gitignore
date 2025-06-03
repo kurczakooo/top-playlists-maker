@@ -1,7 +1,8 @@
 .env
 .cache
 .ipynb
-.deb
+
+*.deb
 
 /chromedriver-win64
 
