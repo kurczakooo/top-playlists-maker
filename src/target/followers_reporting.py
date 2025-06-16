@@ -5,7 +5,7 @@
 
 # ### 0. Import libraries
 
-# In[2]:
+# In[1]:
 
 
 import sys
@@ -242,10 +242,27 @@ def generate_follower_report(name : str,
 # In[ ]:
 
 
-def replace_the_report_and_push_to_mega(report: canvas.Canvas, 
-                                        report_path: str,
-                                        report_name: str,
-                                        logger: logging.Logger):
+def replace_the_report(report: canvas.Canvas, 
+                       report_path: str,
+                       logger: logging.Logger):
+    
+    reports = os.listdir(report_path)
+    
+    for file in reports:
+        logger.info(f"Removing {file} from local data folder.")
+        os.remove(os.path.join(report_path, file))
+        
+    logger.info("Saving new report locally.")
+    report.save()
+
+
+# In[ ]:
+
+
+def push_report_to_mega(report: canvas.Canvas, 
+                        report_path: str,
+                        report_name: str,
+                        logger: logging.Logger):
     reports = os.listdir(report_path)
     for file in reports:
         logger.info(f"Removing {file} from local data folder.")
@@ -291,6 +308,8 @@ async def send_telegram_notif(bot, chat_id, report_name, logger ):
 
 date_today = date.today().strftime("%d_%m_%Y")
 
+is_friday = date.isoweekday(date.today()) == 5
+
 report_path = "src/data/reports"
 report_name = report_path + f"/follower_report_{date_today}.pdf"
 charts_url = "src/data/assets/charts"
@@ -333,8 +352,12 @@ try:
                                       updated_df,
                                       logger)
     
-    logger.info('Saving the report on MEGA.')
-    replace_the_report_and_push_to_mega(report, report_path, report_name, logger)
+    logger.info('Replacing the report locally.')
+    replace_the_report(report, report_path, logger)
+    
+    logger.info(f'is_friday = {is_friday}, saving the report on MEGA.')
+    if is_friday:
+        push_report_to_mega(report, report_path, report_name, logger)
     
     logger.info('Sending the report to Telegram.')
     asyncio.run(send_telegram_notif(bot, chat_id, report_name, logger))
