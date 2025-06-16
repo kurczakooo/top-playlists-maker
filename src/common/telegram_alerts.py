@@ -22,6 +22,12 @@ async def send_top_global_workflow_output_alert(bot: Bot, chat_id: str, message:
     except TelegramError as e:
         logger.error(f"error: {e}")
         
+async def send_telegram_message(bot: Bot, chat_id: str, message: str, logger: Logger):
+    try:
+        await bot.send_message(chat_id=chat_id, text=message)
+        logger.info("Message sent")
+    except TelegramError as e:
+        logger.error(f"error: {e}")
 
 async def send_daily_follower_report(bot: Bot, chat_id: str, report_path: str, logger: Logger):
     try:

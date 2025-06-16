@@ -5,7 +5,7 @@
 
 # ### 0. Import libraries
 
-# In[1]:
+# In[ ]:
 
 
 import sys
@@ -13,7 +13,7 @@ sys.path.append("../../")
 
 from src.common.config import setup_logger
 from src.common.spotify_auth import execute_spotify_auth
-from src.common.telegram_alerts import init_telegram_bot, send_daily_follower_report
+from src.common.telegram_alerts import init_telegram_bot, send_daily_follower_report, send_telegram_message
 
 from spotipy import Spotify
 import pandas as pd
@@ -358,6 +358,7 @@ try:
     logger.info(f'is_friday = {is_friday}, saving the report on MEGA.')
     if is_friday:
         push_report_to_mega(report, report_path, report_name, logger)
+        asyncio.run(send_telegram_message(bot, chat_id, "Report pushed to MEGA.", logger))
     
     logger.info('Sending the report to Telegram.')
     asyncio.run(send_telegram_notif(bot, chat_id, report_name, logger))
