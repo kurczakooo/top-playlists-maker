@@ -5,7 +5,7 @@
 
 # ### 0. Import libraries
 
-# In[ ]:
+# In[138]:
 
 
 import sys
@@ -35,7 +35,7 @@ from dotenv import load_dotenv
 
 # ### 1. Custom functions
 
-# In[ ]:
+# In[139]:
 
 
 def get_playlists_data(sp: Spotify, 
@@ -69,10 +69,10 @@ def get_playlists_data(sp: Spotify,
     return data_df
 
 
-# In[ ]:
+# In[140]:
 
 
-def update_the_historical_data(data_df: pd.DataFrame, csv_url: str = "src/data/follower_count.csv") -> pd.DataFrame:
+def update_the_historical_data(data_df: pd.DataFrame, csv_url: str) -> pd.DataFrame:
     
     hist_df = pd.read_csv(csv_url, index_col = 0)
     
@@ -94,17 +94,21 @@ def update_the_historical_data(data_df: pd.DataFrame, csv_url: str = "src/data/f
     return updated_df
 
 
-# In[ ]:
+# In[141]:
 
 
-def create_followers_chart(followers_df: pd.DataFrame, logger: logging.Logger, days_traceback: int = 365):
+def create_followers_chart(followers_df: pd.DataFrame, 
+                           logger: logging.Logger, 
+                           charts_path: str,
+                           chart_name_suffix: str,
+                           days_traceback: int = 365):
     
     sns.set_style("white", {"grid.color": "#2A2A2A"})
 
     fig, ax = plt.subplots(figsize=(7, 2))
 
-    last_30_days_df = followers_df[followers_df.index > pd.Timestamp(date.today()) - timedelta(days=days_traceback)]
-    sns.lineplot(data=last_30_days_df, ax=ax, color='#45ad61', linewidth=4)
+    last_year_days_df = followers_df[followers_df.index > pd.Timestamp(date.today()) - timedelta(days=days_traceback)]
+    sns.lineplot(data=last_year_days_df, ax=ax, color='#45ad61', linewidth=4)
 
     ax.set_ylabel("", fontsize=5, color='white')
     ax.tick_params(axis='x', labelbottom=False)
@@ -116,17 +120,18 @@ def create_followers_chart(followers_df: pd.DataFrame, logger: logging.Logger, d
     sns.despine()
 
     plt.tight_layout()
-    name = "_".join(last_30_days_df.name.split())
+    name = "_".join(last_year_days_df.name.split())
     
     logger.info(f'Saving {name} follower chart to file.')
-    plt.savefig(f"src/data/assets/charts/{name}_last_month_chart.png")
+    plt.savefig(charts_path + f"/{name}" + chart_name_suffix)
 
 
-# In[ ]:
+# In[142]:
 
 
 def generate_follower_report(name : str,
                              charts_url: str,
+                             chart_name_suffix: str,
                              covers_url: str,
                              followers_df: pd.DataFrame,
                              logger: logging.Logger,
@@ -155,7 +160,7 @@ def generate_follower_report(name : str,
     y -= chart_height
 
     for i, playlist_name in enumerate(followers_df.columns):
-        chart_path = f'{charts_url}/{playlist_name}_last_month_chart.png'
+        chart_path = f'{charts_url}/{playlist_name}' + chart_name_suffix
         cover_path = f'{covers_url}/{playlist_name}.png'
         current_followers = followers_df[playlist_name].iloc[-1]
         a_week_ago_delta = current_followers - followers_df[playlist_name].iloc[-8]
@@ -239,7 +244,7 @@ def generate_follower_report(name : str,
     return c
 
 
-# In[ ]:
+# In[143]:
 
 
 def replace_the_report(report: canvas.Canvas, 
@@ -248,28 +253,20 @@ def replace_the_report(report: canvas.Canvas,
     
     reports = os.listdir(report_path)
     
-    for file in reports:
-        logger.info(f"Removing {file} from local data folder.")
-        os.remove(os.path.join(report_path, file))
+    if len(reports) > 0:
+        for file in reports:
+            logger.info(f"Removing {file} from local data folder.")
+            os.remove(os.path.join(report_path, file))
         
     logger.info("Saving new report locally.")
     report.save()
 
 
-# In[ ]:
+# In[144]:
 
 
-def push_report_to_mega(report: canvas.Canvas, 
-                        report_path: str,
-                        report_name: str,
+def push_report_to_mega(report_name: str,
                         logger: logging.Logger):
-    reports = os.listdir(report_path)
-    for file in reports:
-        logger.info(f"Removing {file} from local data folder.")
-        os.remove(os.path.join(report_path, file))
-        
-    logger.info("Saving new report locally.")
-    report.save()
     
     try:
         #saving to MEGA
@@ -286,12 +283,11 @@ def push_report_to_mega(report: canvas.Canvas,
         logger.info("Logging out of MEGA.")
         subprocess.run(f'mega-logout', shell=True, check=True)
         
-        
     except subprocess.CalledProcessError as e:
-        logger.error(f"Error authorizing or saving report to MEGA: {e.stderr.strip()}")
+        logger.error(f"Error authorizing or saving report to MEGA: {e}")
 
 
-# In[ ]:
+# In[145]:
 
 
 async def send_telegram_notif(bot, chat_id, report_name, logger ):
@@ -308,17 +304,21 @@ async def send_telegram_notif(bot, chat_id, report_name, logger ):
 
 date_today = date.today().strftime("%d_%m_%Y")
 
-is_friday = date.isoweekday(date.today()) == 5
+is_friday = date.isoweekday(date.today()) == 6
 
-report_path = "src/data/reports"
+data_folder_path = "src/"
+
+csv_url = data_folder_path + "data/follower_count.csv"
+report_path = data_folder_path + "data/reports"
 report_name = report_path + f"/follower_report_{date_today}.pdf"
-charts_url = "src/data/assets/charts"
-covers_url = "src/data/assets/covers"
+charts_url = data_folder_path + "data/assets/charts"
+chart_name_suffix = "_last_year_chart.png"
+covers_url = data_folder_path + "data/assets/covers"
 
 
 # ### 3. Run the code
 
-# In[5]:
+# In[147]:
 
 
 logger = setup_logger("followers_reporting.py")
@@ -339,25 +339,26 @@ try:
     df = get_playlists_data(sp, covers_url, logger)
     
     logger.info('Updating local followers data.')
-    updated_df = update_the_historical_data(df)
+    updated_df = update_the_historical_data(df, csv_url)
     
     logger.info('Creating follower charts.')
     for col in updated_df.columns:
-        create_followers_chart(updated_df[col], logger)
+        create_followers_chart(updated_df[col], logger, charts_url, chart_name_suffix)
     
     logger.info('Generating follower report.')
-    report = generate_follower_report(report_name, 
-                                      charts_url, 
-                                      covers_url,
-                                      updated_df,
-                                      logger)
+    report = generate_follower_report(name=report_name, 
+                                      charts_url=charts_url, 
+                                      chart_name_suffix=chart_name_suffix,
+                                      covers_url=covers_url,
+                                      followers_df=updated_df,
+                                      logger=logger)
     
     logger.info('Replacing the report locally.')
     replace_the_report(report, report_path, logger)
     
-    logger.info(f'is_friday = {is_friday}, saving the report on MEGA.')
     if is_friday:
-        push_report_to_mega(report, report_path, report_name, logger)
+        logger.info(f'is_friday = {is_friday}, saving the report on MEGA.')
+        push_report_to_mega(report_name, logger)
         asyncio.run(send_telegram_message(bot, chat_id, "Report pushed to MEGA.", logger))
     
     logger.info('Sending the report to Telegram.')
