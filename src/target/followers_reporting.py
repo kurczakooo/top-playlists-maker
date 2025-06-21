@@ -304,7 +304,7 @@ async def send_telegram_notif(bot, chat_id, report_name, logger ):
 
 date_today = date.today().strftime("%d_%m_%Y")
 
-is_friday = date.isoweekday(date.today()) == 6
+is_friday = date.isoweekday(date.today()) == 5
 
 data_folder_path = "src/"
 
@@ -359,10 +359,10 @@ try:
     if is_friday:
         logger.info(f'is_friday = {is_friday}, saving the report on MEGA.')
         push_report_to_mega(report_name, logger)
-        asyncio.run(send_telegram_message(bot, chat_id, "Report pushed to MEGA.", logger))
-    
-    logger.info('Sending the report to Telegram.')
-    asyncio.run(send_telegram_notif(bot, chat_id, report_name, logger))
+        asyncio.run(send_telegram_message(bot, chat_id, "Report pushed to MEGA.", logger))   
+    else:
+        logger.info('Sending the report to Telegram.')
+        asyncio.run(send_telegram_notif(bot, chat_id, report_name, logger))
         
     logger.info('Job finished.')
 
