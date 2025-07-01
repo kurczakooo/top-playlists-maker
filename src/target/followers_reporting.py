@@ -5,7 +5,7 @@
 
 # ### 0. Import libraries
 
-# In[138]:
+# In[ ]:
 
 
 import sys
@@ -35,7 +35,7 @@ from dotenv import load_dotenv
 
 # ### 1. Custom functions
 
-# In[139]:
+# In[ ]:
 
 
 def get_playlists_data(sp: Spotify, 
@@ -69,32 +69,60 @@ def get_playlists_data(sp: Spotify,
     return data_df
 
 
-# In[140]:
+# In[ ]:
+
+
+x = set([1, 5, 6])
+y = set([1, 5])
+
+print(x.difference(y))
+
+
+# In[ ]:
 
 
 def update_the_historical_data(data_df: pd.DataFrame, csv_url: str) -> pd.DataFrame:
     
-    hist_df = pd.read_csv(csv_url, index_col = 0)
+    if len(data_df.index) != 1:
+            raise ValueError("data_df should have exactly 1 record.")
     
+    hist_df = pd.read_csv(csv_url, index_col = 0)
     hist_df.index = pd.to_datetime(hist_df.index)
-    hist_df = hist_df.astype(int)
+    hist_df = hist_df.astype("Int64")
+    
+    # getting the columns for comparison
+    hist_cols = set(hist_df.columns)
+    new_cols = set(data_df.columns)
+
+    added_cols = new_cols.difference(hist_cols)
+    deleted_cols = hist_cols.difference(new_cols)
+    
+    if len(added_cols) > 0:
+        for col in added_cols:
+            hist_df[col] = 0
+            
+    if len(deleted_cols) > 0:
+        for col in deleted_cols:
+            data_df[col] = None
     
     try:
+        
         updated_df = pd.concat([hist_df, data_df], verify_integrity=True)
         
-        updated_df.to_csv(csv_url)
-    
     except ValueError:
         common_indexes = hist_df.index.intersection(data_df.index)
         hist_df = hist_df.drop(index=common_indexes)
         updated_df = pd.concat([hist_df, data_df], verify_integrity=True)
+        
+    finally: 
+        updated_df = updated_df.sort_index()
         updated_df.to_csv(csv_url)
 
     
     return updated_df
 
 
-# In[141]:
+# In[ ]:
 
 
 def create_followers_chart(followers_df: pd.DataFrame, 
@@ -126,7 +154,7 @@ def create_followers_chart(followers_df: pd.DataFrame,
     plt.savefig(charts_path + f"/{name}" + chart_name_suffix)
 
 
-# In[142]:
+# In[ ]:
 
 
 def generate_follower_report(name : str,
@@ -244,7 +272,7 @@ def generate_follower_report(name : str,
     return c
 
 
-# In[143]:
+# In[ ]:
 
 
 def replace_the_report(report: canvas.Canvas, 
@@ -262,7 +290,7 @@ def replace_the_report(report: canvas.Canvas,
     report.save()
 
 
-# In[144]:
+# In[ ]:
 
 
 def push_report_to_mega(report_name: str,
@@ -287,7 +315,7 @@ def push_report_to_mega(report_name: str,
         logger.error(f"Error authorizing or saving report to MEGA: {e}")
 
 
-# In[145]:
+# In[ ]:
 
 
 async def send_telegram_notif(bot, chat_id, report_name, logger ):
@@ -306,7 +334,10 @@ date_today = date.today().strftime("%d_%m_%Y")
 
 is_friday = date.isoweekday(date.today()) == 5
 
-data_folder_path = "src/"
+# in dev do ../
+# in prod do src/
+
+data_folder_path = "../"
 
 csv_url = data_folder_path + "data/follower_count.csv"
 report_path = data_folder_path + "data/reports"
@@ -318,7 +349,7 @@ covers_url = data_folder_path + "data/assets/covers"
 
 # ### 3. Run the code
 
-# In[147]:
+# In[ ]:
 
 
 logger = setup_logger("followers_reporting.py")
@@ -340,6 +371,8 @@ try:
     
     logger.info('Updating local followers data.')
     updated_df = update_the_historical_data(df, csv_url)
+    # drop discontinued playlists
+    updated_df = updated_df.dropna(axis=1, how='any')
     
     logger.info('Creating follower charts.')
     for col in updated_df.columns:
