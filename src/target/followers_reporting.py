@@ -337,7 +337,7 @@ is_friday = date.isoweekday(date.today()) == 5
 # in dev do ../
 # in prod do src/
 
-data_folder_path = "../"
+data_folder_path = "src/"
 
 csv_url = data_folder_path + "data/follower_count.csv"
 report_path = data_folder_path + "data/reports"
