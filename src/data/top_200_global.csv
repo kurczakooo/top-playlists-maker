@@ -1,6 +1,6 @@
 ,pos,title,artist,uri
 0,1,Ordinary,Alex Warren,spotify:track:6qqrTXSdwiJaq8SO0X2lSe
-1,2,Golden,HUNTR/X,spotify:track:1CPZ5BxNNd0n0nF4Orb9JS
+1,2,Golden,HUNTR/X: EJAE,spotify:track:1CPZ5BxNNd0n0nF4Orb9JS
 2,3,Die With A Smile,Lady Gaga,spotify:track:2plbrEY59IikOBgBGLjaoe
 3,4,Manchild,Sabrina Carpenter,spotify:track:42UBPzRMh5yyz0EDPr6fr1
 4,5,Dirty Work,aespa,spotify:track:6kBtuFVssWq2rORvq2ssXS
@@ -8,24 +8,24 @@
 6,7,Back To Friends,sombr,spotify:track:0FTmksd2dxiE5e3rWyJXs6
 7,8,Love Me Not,Ravyn Lenae,spotify:track:1UNEuG9DYOWiikf00ayr52
 8,9,Birds Of A Feather,Billie Eilish,spotify:track:6dOtVTDdiauQNBQEDOtlAB
-9,10,Your Idol,Saja Boys,spotify:track:1I37Zz2g3hk9eWxaNkj031
+9,10,Your Idol,Saja Boys: Andrew Choi,spotify:track:1I37Zz2g3hk9eWxaNkj031
 10,11,Beautiful Things,Benson Boone,spotify:track:6tNQ70jh4OwmPGpYy6R2o9
 11,12,Lose Control,Teddy Swims,spotify:track:6usohdchdzW9oML7VC4Uhk
-12,13,Soda Pop,Saja Boys,spotify:track:02sy7FAs8dkDNYsHp4Ul3f
+12,13,Soda Pop,Saja Boys: Andrew Choi,spotify:track:02sy7FAs8dkDNYsHp4Ul3f
 13,14,Just Keep Watching,Tate McRae,spotify:track:2yWlGEgEfPot0lv3OAjuG3
 14,15,Shake It To The Max (Fly),MOLIY,spotify:track:0QCIpQV3twfqo9kh0t8Zza
-15,16,How It’s Done,HUNTR/X,spotify:track:3RXUgPNIbUgFxsDWuBQEt6
+15,16,How It’s Done,HUNTR/X: EJAE,spotify:track:3RXUgPNIbUgFxsDWuBQEt6
 16,17,La Plena (W Sound 05),W Sound,spotify:track:6iOndD4OFo7GkaDypWQIou
 17,18,What I Want,Morgan Wallen,spotify:track:48NthgcgfoRrWT8LtgW28A
 18,19,Sapphire,Ed Sheeran,spotify:track:4Q0qVhFQa7j6jRKzo3HDmP
 19,20,Killin' It Girl,j-hope,spotify:track:5PCOOngROV9jWsUViSy4Ed
-20,21,Espresso,Sabrina Carpenter,spotify:track:2qSkIjg1o9h3YT9RAgYN75
+20,21,Espresso,Sabrina Carpenter,spotify:track:6ev5nHxXH1R6CSgxHSEqHN
 21,22,Mystical Magical,Benson Boone,spotify:track:221eHga9f9Ne4f8D7WVgPT
 22,23,Show Me Love,WizTheMc,spotify:track:5ITV0zqzjOYfFWpW0xBmRa
 23,24,Rock That Body,The Black Eyed Peas,spotify:track:2WQ09wqQBIOor7Q0VpIDBK
 24,25,Tu Sancho,Fuerza Regida,spotify:track:6eLQXa6uk2EW8drsiKbABZ
 25,26,Luther,Kendrick Lamar,spotify:track:45J4avUb9Ni0bnETYaYFVJ
-26,27,What It Sounds Like,HUNTR/X,spotify:track:5sBDrrtLGbV64QJnEqfjer
+26,27,What It Sounds Like,HUNTR/X: EJAE,spotify:track:5sBDrrtLGbV64QJnEqfjer
 27,28,Undressed,sombr,spotify:track:4AajxCEwGEsmHmT4H1TwjY
 28,29,Gabriela,KATSEYE,spotify:track:1xOqGUkyxGQRdCvGpvWKmL
 29,30,Pink Pony Club,Chappell Roan,spotify:track:1k2pQc5i348DCHwbn5KTdc
@@ -37,7 +37,7 @@
 35,36,Wildflower,Billie Eilish,spotify:track:3QaPy1KgI7nu9FJEQUgn6h
 36,37,Si Antes Te Hubiera Conocido,Karol G,spotify:track:6WatFBLVB0x077xWeoVc2k
 37,38,DTMF,Bad Bunny,spotify:track:3sK8wGT43QFpWrvNQsrQya
-38,39,Takedown,HUNTR/X,spotify:track:0MHStU0muAIEMbwdnebYu2
+38,39,Takedown,HUNTR/X: EJAE,spotify:track:0MHStU0muAIEMbwdnebYu2
 39,40,No Tiene Sentido,Beele,spotify:track:6dbh2fgGhV5s8rxSOOsEMv
 40,41,Timeless,The Weeknd,spotify:track:0FIDCNYYjNvPVimz5icugS
 41,42,Azizam,Ed Sheeran,spotify:track:0GRc3eGTg8HBdWLRGYgqIc
@@ -123,7 +123,7 @@
 121,122,Mi Refe,Beele,spotify:track:7ricDBUakN3N0YkkKE8Obu
 122,123,Smells Like Teen Spirit,Nirvana,spotify:track:4CeeEOM32jQcH3eN9Q2dGj
 123,124,As It Was,Harry Styles,spotify:track:4Dvkj6JhhA12EX05fT7y2e
-124,125,Strategy,TWICE,spotify:track:22fSzde77hjB052Vo155LF
+124,125,Strategy,TWICE,spotify:track:6Q3lFQgpvhA9VApFKLFZtZ
 125,126,Numb,Linkin Park,spotify:track:7dyluIqv7QYVTXXZiMWPHW
 126,127,Top Diesel,Beele,spotify:track:2QP041AcWg8PwPIWP95RKN
 127,128,Riptide,Vance Joy,spotify:track:7yq4Qj7cqayVTp3FF9CWbm
