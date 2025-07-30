@@ -68,14 +68,12 @@ load_dotenv()
 
 big_query_credentials = os.getenv("BIG_QUERY_CREDENTIALS")
 big_query_credentials = big_query_credentials.replace("\\\n", "\\n")
-big_query_credentials
 
 
 # In[ ]:
 
 
 json_key = json.loads(big_query_credentials)
-json_key
 
 
 # In[ ]:
