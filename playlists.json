@@ -1,0 +1,68 @@
+[
+    {
+        "label": "DAILY TOP 50",
+        "url": "https://open.spotify.com/playlist/0jpg9zJAauAVNZB8hL0lRZ",
+        "button_id": "daily_top_50",
+        "image_path": "../data/assets/covers/daily_top_50.png"
+    },
+    {
+        "label": "DAILY TOP 100",
+        "url": "https://open.spotify.com/playlist/21xmtGN7jfS9EsciL63e05",
+        "button_id": "daily_top_100",
+        "image_path": "../data/assets/covers/daily_top_100.png"
+    },
+    {
+        "label": "DAILY TOP 200",
+        "url": "https://open.spotify.com/playlist/4oFMXgSsKQhic55zAHOljt",
+        "button_id": "daily_top_200",
+        "image_path": "../data/assets/covers/daily_top_200.png"
+    },
+    {
+        "label": "Techno French 2025",
+        "url": "https://open.spotify.com/playlist/5vmarB9r4eYigSjRQJB3pZ",
+        "button_id": "techno_french_2025",
+        "image_path": "../data/assets/covers/techno_french_2025.png"
+    },
+    {
+        "label": "H&M Cash Register",
+        "url": "https://open.spotify.com/playlist/5UHx3FybMvCSFWofFh6ZF1",
+        "button_id": "h&m_cash_register",
+        "image_path": "../data/assets/covers/h&m_cash_register.png"
+    },
+    {
+        "label": "Europop summer dancefloor 🪩",
+        "url": "https://open.spotify.com/playlist/5FLUVwnkzDsdTcpUn7b36P",
+        "button_id": "europop_summer_dancefloor",
+        "image_path": "../data/assets/covers/europop_summer_dancefloor.png"
+    },
+    {
+        "label": "LET OUT INNER DEMONS🔥😈",
+        "url": "https://open.spotify.com/playlist/0pMhElaR4Mc2VgrbXNKn1S",
+        "button_id": "let_out_inner_demons",
+        "image_path": "../data/assets/covers/let_out_inner_demons.png"
+    },
+    {
+        "label": "CHILL RAP SONGS",
+        "url": "https://open.spotify.com/playlist/2EGT6DCKlpxgfhCDFjXOeq",
+        "button_id": "chill_rap_songs",
+        "image_path": "../data/assets/covers/chill_rap_songs.png"
+    },
+    {
+        "label": "HOT RAP HITS🔥🎧",
+        "url": "https://open.spotify.com/playlist/6lHcV1NIF9IA28GLL8kpWq",
+        "button_id": "hot_rap_hits",
+        "image_path": "../data/assets/covers/hot_rap_hits.png"
+    },
+    {
+        "label": "Hardcore Workout Motivation💪🏼",
+        "url": "https://open.spotify.com/playlist/4vgo1awfbPUytObaBpcL3d",
+        "button_id": "hardcore_workout_motivation",
+        "image_path": "../data/assets/covers/hardcore_workout_motivation.png"
+    },
+    {
+        "label": "Sad music to listen to when you're feelin down",
+        "url": "https://open.spotify.com/playlist/0cnyhimZXEiYfUIp3nOETS",
+        "button_id": "sad_music_to_listen_to_when_you're_feelin_down",
+        "image_path": "../data/assets/covers/sad_music_to_listen_to_when_you're_feelin_down.png"
+    }
+]

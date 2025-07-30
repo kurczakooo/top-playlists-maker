@@ -5,7 +5,7 @@
 
 # ### 0. Import libraries
 
-# In[ ]:
+# In[20]:
 
 
 import sys
@@ -18,6 +18,7 @@ from src.common.telegram_alerts import init_telegram_bot, send_daily_follower_re
 from spotipy import Spotify
 import pandas as pd
 import requests
+import json
 from datetime import date, timedelta
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -35,18 +36,21 @@ from dotenv import load_dotenv
 
 # ### 1. Custom functions
 
-# In[ ]:
+# In[29]:
 
 
 def get_playlists_data(sp: Spotify, 
                        cover_images_folder: str,
-                       logger: logging.Logger) -> pd.DataFrame:
+                       logger: logging.Logger) -> tuple[pd.DataFrame, list[dict[str, str]]]:
+    
     playlists = sp.current_user_playlists()
     data = {}
+    playlists_json = []
     
     for playlist in playlists['items']:
         name = playlist['name']
-        name = "_".join(name.split())
+        url = playlist['external_urls']['spotify']
+        cleared_name = "_".join(name.encode('ascii', 'ignore').decode().lower().split())
         playlist_id = playlist['id']
         
         # looking for the playlist based on id to get details
@@ -58,24 +62,39 @@ def get_playlists_data(sp: Spotify,
         logger.info(f"Extracting {name} cover image.")
         # getting and saving playlist cover to a file
         cover_url = playlist_details['images'][0]['url']
+        
         response = requests.get(cover_url)
         response.raise_for_status()
         cover_image = Image.open(BytesIO(response.content))
-        cover_image.save(f"{cover_images_folder}/{name}.png")
+        
+        cover_image.save(f"{cover_images_folder}/{cleared_name}.png")
+        
+        playlist_json_item = {
+            "label": name,
+            "url": url,
+            "button_id": cleared_name,
+            "image_path": f"{cover_images_folder}/{cleared_name}.png"
+        }
+        playlists_json.append(playlist_json_item)
       
     data_df = pd.DataFrame(data = [data])
     data_df.index = [pd.to_datetime(date.today())]
 
-    return data_df
+    return data_df, playlists_json
 
 
-# In[ ]:
+# In[31]:
 
 
-x = set([1, 5, 6])
-y = set([1, 5])
+sp = execute_spotify_auth(logger)
+df, json_pl = get_playlists_data(sp, covers_url, logger)
 
-print(x.difference(y))
+
+# In[32]:
+
+
+with open("../../playlists.json", "w", encoding="utf-8") as j:
+    json.dump(json_pl, j, indent=4, ensure_ascii=False)
 
 
 # In[ ]:
@@ -327,7 +346,7 @@ async def send_telegram_notif(bot, chat_id, report_name, logger ):
 
 # ### 2. Envinroment variables
 
-# In[ ]:
+# In[2]:
 
 
 date_today = date.today().strftime("%d_%m_%Y")
@@ -337,7 +356,7 @@ is_friday = date.isoweekday(date.today()) == 5
 # in dev do ../
 # in prod do src/
 
-data_folder_path = "src/"
+data_folder_path = "../"
 
 csv_url = data_folder_path + "data/follower_count.csv"
 report_path = data_folder_path + "data/reports"
@@ -349,14 +368,14 @@ covers_url = data_folder_path + "data/assets/covers"
 
 # ### 3. Run the code
 
-# In[ ]:
+# In[4]:
 
 
 logger = setup_logger("followers_reporting.py")
 logger.info('Starting job initialization.')
 
 
-# In[ ]:
+# In[5]:
 
 
 try:

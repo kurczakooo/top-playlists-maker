@@ -15,3 +15,5 @@ seaborn
 reportlab
 pillow
 python-telegram-bot
+google-cloud-bigquery
+db-dtypes
