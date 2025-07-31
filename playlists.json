@@ -1,68 +1,79 @@
 [
     {
+        "label": "H&M Cash Register",
+        "description": "You know the vibes. Best selection of 2025 house, deep house, electro, h&amp;m music, tech house, club bangers, underground vibes, melodic drops, and hypnotic basslines. Perfect for party nights, gym sessions, sunset drives &amp; late-night focus. For information dm @pulsebeatsofficial",
+        "image": "h&m_cash_register.png",
+        "url": "https://open.spotify.com/playlist/2Hm9PJnYO34PNGZhnFK85W",
+        "button_id": "h&m_cash_register"
+    },
+    {
         "label": "DAILY TOP 50",
+        "description": "The most popular songs  in the world right now.  Daily updated playlist of 50 most viral songs from today. You can find global trending hits, tiktok songs &amp; more. Follow for latest tracks and new music every day!",
+        "image": "daily_top_50.png",
         "url": "https://open.spotify.com/playlist/0jpg9zJAauAVNZB8hL0lRZ",
-        "button_id": "daily_top_50",
-        "image_path": "../data/assets/covers/daily_top_50.png"
+        "button_id": "daily_top_50"
     },
     {
         "label": "DAILY TOP 100",
+        "description": "The most popular songs  in the world right now.  Daily updated playlist of 100 most viral songs from today. You can find global trending hits, tiktok songs &amp; more. Follow for latest tracks and new music every day!",
+        "image": "daily_top_100.png",
         "url": "https://open.spotify.com/playlist/21xmtGN7jfS9EsciL63e05",
-        "button_id": "daily_top_100",
-        "image_path": "../data/assets/covers/daily_top_100.png"
+        "button_id": "daily_top_100"
     },
     {
         "label": "DAILY TOP 200",
+        "description": "The most popular songs  in the world right now.  Daily updated playlist of 200 most viral songs from today. You can find global trending hits, tiktok songs &amp; more. Follow for latest tracks and new music every day!",
+        "image": "daily_top_200.png",
         "url": "https://open.spotify.com/playlist/4oFMXgSsKQhic55zAHOljt",
-        "button_id": "daily_top_200",
-        "image_path": "../data/assets/covers/daily_top_200.png"
+        "button_id": "daily_top_200"
     },
     {
         "label": "Techno French 2025",
+        "description": "A wild blend of techno, acid, electro and house with a punk edge. From underground rave anthems to hard-hitting festival bangers, this playlist dives deep into the Frenchcore, tekno, and mental scenes. Perfect for club nights, free parties, or tripping into the LSD zone",
+        "image": "techno_french_2025.png",
         "url": "https://open.spotify.com/playlist/5vmarB9r4eYigSjRQJB3pZ",
-        "button_id": "techno_french_2025",
-        "image_path": "../data/assets/covers/techno_french_2025.png"
-    },
-    {
-        "label": "H&M Cash Register",
-        "url": "https://open.spotify.com/playlist/5UHx3FybMvCSFWofFh6ZF1",
-        "button_id": "h&m_cash_register",
-        "image_path": "../data/assets/covers/h&m_cash_register.png"
+        "button_id": "techno_french_2025"
     },
     {
         "label": "Europop summer dancefloor 🪩",
+        "description": "Get ready to dance the night away with the hottest europop hits! 💃🎶 Tags: europop, pitbull, dance, energetic, jeniffer lopez, summer vibes, inna, party, stereo love, tropical, high-energy, bass, club, dancefloor, fun, toca toca, 2000&#x27;s, 2010&#x27;s, celebration, euphoria",
+        "image": "europop_summer_dancefloor.png",
         "url": "https://open.spotify.com/playlist/5FLUVwnkzDsdTcpUn7b36P",
-        "button_id": "europop_summer_dancefloor",
-        "image_path": "../data/assets/covers/europop_summer_dancefloor.png"
+        "button_id": "europop_summer_dancefloor"
     },
     {
         "label": "LET OUT INNER DEMONS🔥😈",
+        "description": "Everything to get the best out of your self during a workout🔥Tags: hard trap, underground, emo rap, motivation, gym, scream, energy, xxxtentacion, skimasktheslumpgod🔥For info dm @pulsebeatsofficial",
+        "image": "let_out_inner_demons.png",
         "url": "https://open.spotify.com/playlist/0pMhElaR4Mc2VgrbXNKn1S",
-        "button_id": "let_out_inner_demons",
-        "image_path": "../data/assets/covers/let_out_inner_demons.png"
+        "button_id": "let_out_inner_demons"
     },
     {
         "label": "CHILL RAP SONGS",
+        "description": "",
+        "image": "chill_rap_songs.png",
         "url": "https://open.spotify.com/playlist/2EGT6DCKlpxgfhCDFjXOeq",
-        "button_id": "chill_rap_songs",
-        "image_path": "../data/assets/covers/chill_rap_songs.png"
+        "button_id": "chill_rap_songs"
     },
     {
         "label": "HOT RAP HITS🔥🎧",
+        "description": "The hottest rap&#x2F;trap&#x2F;r&amp;b hits you all know!💪🏼🔥 For any information dm us on @pulsebeatsofficial👋 Tags : Hip Hop, Rap, Pop, Party, Car Music, Songs, Drake, Travis Scott, J cole, Lil Nas X, Music",
+        "image": "hot_rap_hits.png",
         "url": "https://open.spotify.com/playlist/6lHcV1NIF9IA28GLL8kpWq",
-        "button_id": "hot_rap_hits",
-        "image_path": "../data/assets/covers/hot_rap_hits.png"
+        "button_id": "hot_rap_hits"
     },
     {
         "label": "Hardcore Workout Motivation💪🏼",
+        "description": "Legend has it that you&#x27;ll destroy your last PB with this playlist, so why wouldn&#x27;t you try? I For information dm @pulsebeatsofficial I tags: gym, training, zyzz, running, weightlifting, hardcore ",
+        "image": "hardcore_workout_motivation.png",
         "url": "https://open.spotify.com/playlist/4vgo1awfbPUytObaBpcL3d",
-        "button_id": "hardcore_workout_motivation",
-        "image_path": "../data/assets/covers/hardcore_workout_motivation.png"
+        "button_id": "hardcore_workout_motivation"
     },
     {
         "label": "Sad music to listen to when you're feelin down",
+        "description": "Place for all of you that&#x27;s broken down. If you wanna throw a party go checkout our other playlists.",
+        "image": "sad_music_to_listen_to_when_you're_feelin_down.png",
         "url": "https://open.spotify.com/playlist/0cnyhimZXEiYfUIp3nOETS",
-        "button_id": "sad_music_to_listen_to_when_you're_feelin_down",
-        "image_path": "../data/assets/covers/sad_music_to_listen_to_when_you're_feelin_down.png"
+        "button_id": "sad_music_to_listen_to_when_you're_feelin_down"
     }
 ]

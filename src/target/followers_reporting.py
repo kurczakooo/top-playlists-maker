@@ -5,7 +5,7 @@
 
 # ### 0. Import libraries
 
-# In[20]:
+# In[42]:
 
 
 import sys
@@ -36,7 +36,7 @@ from dotenv import load_dotenv
 
 # ### 1. Custom functions
 
-# In[29]:
+# In[43]:
 
 
 def get_playlists_data(sp: Spotify, 
@@ -49,6 +49,8 @@ def get_playlists_data(sp: Spotify,
     
     for playlist in playlists['items']:
         name = playlist['name']
+        column_name = "_".join(playlist['name'].split())
+        description = playlist['description']
         url = playlist['external_urls']['spotify']
         cleared_name = "_".join(name.encode('ascii', 'ignore').decode().lower().split())
         playlist_id = playlist['id']
@@ -57,7 +59,7 @@ def get_playlists_data(sp: Spotify,
         logger.info(f"Extracting {name} info.")
         playlist_details = sp.playlist(playlist_id)
         followers = playlist_details['followers']['total']
-        data.update({name : int(followers)})        
+        data.update({column_name : int(followers)})        
         
         logger.info(f"Extracting {name} cover image.")
         # getting and saving playlist cover to a file
@@ -71,9 +73,10 @@ def get_playlists_data(sp: Spotify,
         
         playlist_json_item = {
             "label": name,
+            "description" : description,
+            "image": f"{cleared_name}.png",
             "url": url,
-            "button_id": cleared_name,
-            "image_path": f"{cover_images_folder}/{cleared_name}.png"
+            "button_id": cleared_name
         }
         playlists_json.append(playlist_json_item)
       
@@ -83,21 +86,23 @@ def get_playlists_data(sp: Spotify,
     return data_df, playlists_json
 
 
-# In[31]:
+# In[44]:
 
 
-sp = execute_spotify_auth(logger)
-df, json_pl = get_playlists_data(sp, covers_url, logger)
+# sp = execute_spotify_auth(logger)
+# df, json_pl = get_playlists_data(sp, covers_url, logger)
+
+# df
 
 
-# In[32]:
+# In[45]:
 
 
-with open("../../playlists.json", "w", encoding="utf-8") as j:
-    json.dump(json_pl, j, indent=4, ensure_ascii=False)
+# with open("../../playlists.json", "w", encoding="utf-8") as j:
+#     json.dump(json_pl, j, indent=4, ensure_ascii=False)
 
 
-# In[ ]:
+# In[46]:
 
 
 def update_the_historical_data(data_df: pd.DataFrame, csv_url: str) -> pd.DataFrame:
@@ -141,7 +146,7 @@ def update_the_historical_data(data_df: pd.DataFrame, csv_url: str) -> pd.DataFr
     return updated_df
 
 
-# In[ ]:
+# In[47]:
 
 
 def create_followers_chart(followers_df: pd.DataFrame, 
@@ -167,13 +172,14 @@ def create_followers_chart(followers_df: pd.DataFrame,
     sns.despine()
 
     plt.tight_layout()
-    name = "_".join(last_year_days_df.name.split())
     
-    logger.info(f'Saving {name} follower chart to file.')
-    plt.savefig(charts_path + f"/{name}" + chart_name_suffix)
+    logger.info(f'Saving {last_year_days_df.name} follower chart to file.')
+    clear_name = "_".join(last_year_days_df.name.encode('ascii', 'ignore').decode().lower().split())
+    
+    plt.savefig(charts_path + f"/{clear_name}" + chart_name_suffix)
 
 
-# In[ ]:
+# In[48]:
 
 
 def generate_follower_report(name : str,
@@ -207,8 +213,9 @@ def generate_follower_report(name : str,
     y -= chart_height
 
     for i, playlist_name in enumerate(followers_df.columns):
-        chart_path = f'{charts_url}/{playlist_name}' + chart_name_suffix
-        cover_path = f'{covers_url}/{playlist_name}.png'
+        playlist_name_cleared = "_".join(playlist_name.encode('ascii', 'ignore').decode().lower().split())
+        chart_path = f'{charts_url}/{playlist_name_cleared}' + chart_name_suffix
+        cover_path = f'{covers_url}/{playlist_name_cleared}.png'
         current_followers = followers_df[playlist_name].iloc[-1]
         a_week_ago_delta = current_followers - followers_df[playlist_name].iloc[-8]
         a_month_ago_delta = current_followers - followers_df[playlist_name].iloc[-31]
@@ -291,7 +298,7 @@ def generate_follower_report(name : str,
     return c
 
 
-# In[ ]:
+# In[49]:
 
 
 def replace_the_report(report: canvas.Canvas, 
@@ -309,7 +316,7 @@ def replace_the_report(report: canvas.Canvas,
     report.save()
 
 
-# In[ ]:
+# In[50]:
 
 
 def push_report_to_mega(report_name: str,
@@ -334,7 +341,7 @@ def push_report_to_mega(report_name: str,
         logger.error(f"Error authorizing or saving report to MEGA: {e}")
 
 
-# In[ ]:
+# In[51]:
 
 
 async def send_telegram_notif(bot, chat_id, report_name, logger ):
@@ -346,7 +353,7 @@ async def send_telegram_notif(bot, chat_id, report_name, logger ):
 
 # ### 2. Envinroment variables
 
-# In[2]:
+# In[ ]:
 
 
 date_today = date.today().strftime("%d_%m_%Y")
@@ -356,7 +363,7 @@ is_friday = date.isoweekday(date.today()) == 5
 # in dev do ../
 # in prod do src/
 
-data_folder_path = "../"
+data_folder_path = "src/"
 
 csv_url = data_folder_path + "data/follower_count.csv"
 report_path = data_folder_path + "data/reports"
@@ -368,14 +375,14 @@ covers_url = data_folder_path + "data/assets/covers"
 
 # ### 3. Run the code
 
-# In[4]:
+# In[53]:
 
 
 logger = setup_logger("followers_reporting.py")
 logger.info('Starting job initialization.')
 
 
-# In[5]:
+# In[ ]:
 
 
 try:
@@ -386,7 +393,7 @@ try:
     bot, chat_id = init_telegram_bot()
     
     logger.info('Getting followers data from Spotify.')
-    df = get_playlists_data(sp, covers_url, logger)
+    df, playlists_json = get_playlists_data(sp, covers_url, logger)
     
     logger.info('Updating local followers data.')
     updated_df = update_the_historical_data(df, csv_url)

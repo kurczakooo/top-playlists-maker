@@ -62,8 +62,6 @@ This project is set to ingest playlists data from Spotify API, package it into a
 
 ##### **WORKFLOWS**
 
-🔗[Billboard top 200](https://www.billboard.com/charts/billboard-global-200/)
-
 ```mermaid
 graph TD;
 
