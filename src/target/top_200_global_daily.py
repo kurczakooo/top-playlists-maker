@@ -43,9 +43,9 @@ global_200_url = "https://www.billboard.com/charts/billboard-global-200/"
 
 reject_cookies_button_id = 'onetrust-reject-all-handler'
 html_class = 'o-chart-results-list-row-container'
-pos_class = 'c-label a-font-primary-bold-l u-font-size-32@tablet u-letter-spacing-0080@tablet'
+pos_class = 'c-label  a-font-basic u-font-size-22@desktop u-font-size-19@mobile-max u-line-height-33px'
 song_html_id = 'title-of-a-story'
-artist_class = 'a-no-trucate'
+artist_class = 'u-max-width-397'
 
 top_df_columns = ['pos', 'title', 'artist']
 top_200_playlist_name = 'DAILY TOP 200'
@@ -90,10 +90,10 @@ try:
     # TRASFORMING THE DATA TO A DF, DO QC
     logger.info('Transforming the data to a DataFrame, doing quality checks.')
     top_200_df = filter_names_artists_pos(songs, 
-                                        song_html_id, 
-                                        artist_class, 
-                                        pos_class, 
-                                        top_df_columns)
+                                          song_html_id, 
+                                          artist_class, 
+                                          pos_class, 
+                                          top_df_columns)
 
     assert vaildate_top_df(top_200_df, required_count=200, required_columns=top_df_columns) == 'OK', 'QC fail.'
         

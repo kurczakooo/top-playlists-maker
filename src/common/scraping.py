@@ -50,7 +50,12 @@ def filter_names_artists_pos(unfiltered_songs: list[str],
     
     songs_list = []
     for element in unfiltered_songs:
-        pos = int(element.find('span', class_ = pos_class).text.strip())
+        position_tag = element.find('span', class_='c-label')
+        if position_tag and position_tag.text.strip().isdigit():
+            pos = int(position_tag.text.strip())
+        else:
+            pos = None  # Albo continue
+        # pos = int(element.find('span', class_ = pos_class).text.strip())
         title = element.find('h3', id = song_html_id).text.strip()
         artist = element.find('span', class_ = artist_class).text.strip()
         artist = re.split(pattern, artist, maxsplit = 1)[0]
