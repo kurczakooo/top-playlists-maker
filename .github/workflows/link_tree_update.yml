@@ -1,4 +1,4 @@
-name: Daily top 200, 100, 50 global at 6 am
+name: Playlists data update locally and on link-tree repo 5.45 am
 
 # Controls when the action will run.
 on:
