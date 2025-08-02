@@ -1,0 +1,45 @@
+name: Daily top 200, 100, 50 global at 6 am
+
+# Controls when the action will run.
+on:
+    schedule:
+        - cron: '45 3 * * *' # Every day at 3.45am UTC - 5.45am CET
+    workflow_dispatch:
+
+permissions:
+    contents: write
+
+jobs:
+    update-playlist:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout repo
+              uses: actions/checkout@v3
+
+            - name: Set up Python
+              uses: actions/setup-python@v5
+              with:
+                  python-version: '3.12.8'
+
+            - name: Playlists data update locally
+              env:
+                  ID: ${{ secrets.ID }}
+                  SECRET: ${{ secrets.SECRET }}
+                  URI: ${{ secrets.URI }}
+                  REFRESH: ${{ secrets.REFRESH }}
+                  TELEGRAM_API_KEY: ${{secrets.TELEGRAM_API_KEY}}
+                  TELEGRAM_CHAT_ID: ${{secrets.TELEGRAM_CHAT_ID}}
+              run: |
+                  export PYTHONPATH=$(pwd)
+                  python src/target/fetch_playlist_info.py
+
+            - name: Commit changes
+              run: |
+                  git config --global user.name "github-actions[bot]"
+                  git config --global user.email "github-actions[bot]@users.noreply.github.com"
+                  git add .
+                  git commit -m "Updated playlists covers and json file with playlists info"
+                  git push
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
