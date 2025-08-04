@@ -57,6 +57,7 @@ jobs:
 
             - name: Overwrite json and covers in link-tree repo
               run: |
+                  cd ..
                   ls
                   
                   # Delete old data
