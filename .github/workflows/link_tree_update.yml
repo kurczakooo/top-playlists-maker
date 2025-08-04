@@ -68,6 +68,7 @@ jobs:
 
             - name: Commit and push changes to playlists-link-tree
               run: |
+                cd ..
                 cd playlists-link-tree
                 git config --global user.name "github-actions[bot]"
                 git config --global user.email "github-actions[bot]@users.noreply.github.com"
