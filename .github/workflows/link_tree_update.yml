@@ -64,7 +64,7 @@ jobs:
                   
                   # Copy updated covers and json
                   cp top-playlists-maker/src/data/playlists.json playlists-link-tree/public/
-                  cp -r top-playlists-maker/src/data/covers playlists-link-tree/public/
+                  cp -r top-playlists-maker/src/data/assets/covers playlists-link-tree/public/
 
             - name: Commit and push changes to playlists-link-tree
               run: |
