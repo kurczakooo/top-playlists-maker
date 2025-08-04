@@ -58,22 +58,19 @@ jobs:
             - name: Overwrite json and covers in link-tree repo
               run: |
                   cd ..
-                  ls
-                  
                   # Delete old data
-                  # rm -f playlists-link-tree/public/playlists.json
-                  # rm -rf playlists-link-tree/public/covers
+                  rm -f playlists-link-tree/public/playlists.json
+                  rm -rf playlists-link-tree/public/covers
                   
-                  # # Copy updated covers and json
-                  # cp top-playlists-maker/src/data/playlists.json playlists-link-tree/public/
-                  # cp -r top-playlists-maker/src/data/covers playlists-link-tree/public/
+                  # Copy updated covers and json
+                  cp top-playlists-maker/src/data/playlists.json playlists-link-tree/public/
+                  cp -r top-playlists-maker/src/data/covers playlists-link-tree/public/
 
             - name: Commit and push changes to playlists-link-tree
               run: |
-              
-                # cd playlists-link-tree
-                # git config --global user.name "github-actions[bot]"
-                # git config --global user.email "github-actions[bot]@users.noreply.github.com"
-                # git add .
-                # git commit -m "Update playlists.json and covers from top-playlist-maker"
-                # git push
+                cd playlists-link-tree
+                git config --global user.name "github-actions[bot]"
+                git config --global user.email "github-actions[bot]@users.noreply.github.com"
+                git add .
+                git commit -m "Update playlists.json and covers from top-playlist-maker"
+                git push
