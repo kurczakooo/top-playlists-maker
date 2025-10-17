@@ -1,5 +1,12 @@
 [
     {
+        "label": "Home for Christmas 🎄🎅🏽",
+        "description": "The warmest, most nostalgic Christmas songs to bring back the magic of winter nights and cozy holidays. Classics from Mariah Carey, Wham!, Michael Bublé, and more. the soundtrack to snowy evenings, glowing lights, and hot cocoa by the fire. tags: Santa, winter, family, nostalgia, carols, snow, vibes",
+        "image": "home_for_christmas.png",
+        "url": "https://open.spotify.com/playlist/3JSsIwEfCwqATsII064Sv6",
+        "button_id": "home_for_christmas"
+    },
+    {
         "label": "BEST OF 2010s",
         "description": "The most nostalgic, legendary party songs of the decade. Biggest hits of 2010 - 2020. This playlist is the only thing you want to play when you get ahold of the AUX. tags: 2010, 2012, 2014, 2016, hits, bangers, nostalgia, childhood, dreams, party, popular, mix, mashup, club",
         "image": "best_of_2010s.png",
